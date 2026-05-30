@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Portfolio | ivantroybandico.brave</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* Global theme variables — matches your entire site */
+    :root {
+      --primary: #0D9488;       /* Deep Teal Green */
+      --secondary: #34D399;     /* Soft Emerald Green */
+      --accent: #059669;        /* Rich Green */
+      --light: #F0FDF4;         /* Very Light Green */
+      --neutral: #F3F4F6;        /* Neutral Background */
+      --dark: #1F2937;          /* Dark Gray */
+      --gray: #6B7280;          /* Medium Gray */
+    }
+
+    .page-header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--light);
+    }
+    .page-header h1 {
+      color: var(--primary);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .page-header p {
+      color: var(--gray);
+      font-size: 1.05rem;
+      max-width: 600px;
+    }
+
+    /* Projects Grid — responsive & modern spacing */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 2rem;
+    }
+
+    /* Project Card — consistent design language */
+    .project-card {
+      background: #ffffff;
+      border-radius: 14px;
+      overflow: hidden;
+      border-top: 4px solid var(--secondary);
+      box-shadow: 0 4px 12px rgba(13, 148, 136, 0.06);
+      transition: all 0.3s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .project-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 24px rgba(13, 148, 136, 0.12);
+      border-top-color: var(--primary);
+    }
+
+    /* Image section — clean framing */
+    .project-img-wrapper {
+      position: relative;
+      overflow: hidden;
+      background-color: var(--light);
+    }
+    .project-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .project-card:hover .project-img {
+      transform: scale(1.05);
+    }
+
+    /* Content area — proper spacing & typography */
+    .project-info {
+      padding: 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .project-info h3 {
+      color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+    .project-desc {
+      color: var(--dark);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 0.8rem;
+    }
+
+    /* Tech stack tag — styled like your skill labels */
+    .tech-stack {
+      font-size: 0.825rem;
+      color: var(--accent);
+      background-color: var(--light);
+      padding: 0.4rem 0.7rem;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 1.2rem;
+      font-weight: 500;
+    }
+
+    /* Action button — matches theme colors */
+    .open-btn {
+      display: inline-block;
+      margin-top: auto;
+      padding: 0.65rem 1.2rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-align: center;
+      transition: opacity 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 6px rgba(13, 148, 136, 0.15);
+    }
+    .open-btn:hover {
+      opacity: 0.92;
+      transform: translateY(-2px);
+      color: #ffffff !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">← Back to Home</a>
+
+    <div class="page-content">
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1>My Portfolio & Projects</h1>
+        <p>All my work — every tool and system I built is a dedicated page with full details below.</p>
+      </div>
+
+      <div class="projects-grid">
+
+        <!-- ✅ PROJECT 1 -->
+        <div class="project-card">
+          <div class="project-img-wrapper">
+            <img src="../assets/images/project1.png" alt="Complete TRAIN Law Calculator" class="project-img">
+          </div>
+          <div class="project-info">
+            <h3>Complete TRAIN Law Calculator</h3>
+            <p class="project-desc">Handles every type of income earner with accurate, up-to-date computation based on Philippine tax codes.</p>
+            <div class="tech-stack">🛠️ Employee • Self-Employed • Professional • Business • Mixed Income</div>
+            <a href="./project1/" class="open-btn">Open Project</a>
+          </div>
+        </div>
+
+        <!-- ✅ PROJECT 2 -->
+        <div class="project-card">
+          <div class="project-img-wrapper">
+            <img src="../assets/images/project2.png" alt="Salary Calculator" class="project-img">
+          </div>
+          <div class="project-info">
+            <h3>Salary Calculator</h3>
+            <p class="project-desc">Fast and precise computation following Republic Act 10963 — includes tax, SSS, PhilHealth, and Pag-IBIG.</p>
+            <div class="tech-stack">🛠️ Updated Tax & Contribution Rules</div>
+            <a href="./project2/" class="open-btn">Open Project</a>
+          </div>
+        </div>
+
+        <!-- ✅ PROJECT 3 -->
+        <div class="project-card">
+          <div class="project-img-wrapper">
+            <img src="../assets/images/project3.png" alt="Payroll Engine" class="project-img">
+          </div>
+          <div class="project-info">
+            <h3>Payroll Engine</h3>
+            <p class="project-desc">Complete enterprise-grade system to generate, manage, and print professional payslips in bulk.</p>
+            <div class="tech-stack">🛠️ Payroll Maker & Printer</div>
+            <a href="./project3/" class="open-btn">Open Project</a>
+          </div>
+        </div>
+
+        <!-- ✅ ADD MORE PROJECTS — COPY THIS BLOCK ↓ -->
+        <!--
+        <div class="project-card">
+          <div class="project-img-wrapper">
+            <img src="../assets/images/NEW_IMAGE.png" alt="New Project" class="project-img">
+          </div>
+          <div class="project-info">
+            <h3>New Project Name</h3>
+            <p class="project-desc">Short description of your project page and its purpose.</p>
+            <div class="tech-stack">🛠️ Features / Scope</div>
+            <a href="./YOUR_FOLDER_NAME/" class="open-btn">Open Project</a>
+          </div>
+        </div>
+        -->
+
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
