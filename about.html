@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Me | ivantroybandico.brave</title>
+  <link rel="stylesheet" href="../../style.css">
+  <style>
+    /* Matches your main theme colors & style */
+    :root {
+      --primary: #0D9488;
+      --secondary: #34D399;
+      --accent: #059669;
+      --light: #F0FDF4;
+      --neutral: #F3F4F6;
+      --dark: #1F2937;
+      --gray: #6B7280;
+    }
+
+    /* Enhanced donation section — consistent with your card design */
+    .donation-section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 2.5rem;
+      border-top: 4px solid var(--primary);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+    }
+    .donation-section:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    .donation-section h2 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .donation-section p.intro {
+      color: var(--dark);
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.6;
+    }
+
+    /* QR Code styling — clean & framed */
+    .qr-wrapper {
+      background: var(--light);
+      padding: 1rem;
+      border-radius: 10px;
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(13, 148, 136, 0.1);
+    }
+    .qr-code {
+      width: 200px;
+      height: 200px;
+      display: block;
+      border-radius: 6px;
+    }
+
+    /* Payment options layout — clean list style */
+    .payment-options {
+      text-align: left;
+      max-width: 400px;
+      margin: 0 auto 1.2rem;
+      background: var(--light);
+      padding: 1.2rem;
+      border-radius: 8px;
+      border-left: 3px solid var(--secondary);
+    }
+    .payment-options p {
+      margin: 0.6rem 0;
+      font-size: 0.95rem;
+      color: var(--dark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .payment-options p strong {
+      color: var(--primary);
+    }
+
+    /* Notes styling — subtle & small */
+    .note {
+      font-size: 0.825rem;
+      color: var(--gray);
+      margin: 0.3rem 0;
+      font-style: italic;
+    }
+
+    /* Highlight crypto address like your links */
+    .crypto-address {
+      background: rgba(13, 148, 136, 0.08);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 600;
+      color: var(--accent);
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">← Back to Home</a>
+
+    <div class="page-content">
+      <h1>About Me</h1>
+      <hr style="margin: 1rem 0; border-color: var(--light);">
+
+      <p>Hi! I’m Ivan, a person who believes the internet should be owned by its users. That’s why I built this space — fully decentralized, on IPFS, under my own .brave domain.</p>
+
+      <h2 style="margin-top: 1.5rem; color: var(--primary);">Connect With Me</h2>
+      <ul style="list-style: disc; padding-left: 1.2rem; color: var(--dark);">
+        <li style="margin: 0.5rem 0;">Email: <a href="mailto:ivantroybandico@gmail.com" style="color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent);">ivantroybandico@gmail.com</a></li>
+      </ul>
+
+
+      <!-- ✅ IMPROVED DONATION SECTION -->
+      <div class="donation-section">
+        <h2>☕ Support My Work</h2>
+        <p class="intro">If you find my projects or content helpful, any contribution is greatly appreciated — it helps me keep building and improving this decentralized space!</p>
+
+        <!-- QR Code — now embedded properly, works offline -->
+        <div class="qr-wrapper">
+          <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" class="qr-code">
+            <image 
+              href="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=00020101021128500011ph.ppmi.p2m0111PAPHPHM1XXX030920180619605033105204539953036085802PH5917IVAN%20TROY%20BANDICO6008Midsayap62440014com.paymaya.qr05227D6PJoHDKxdsBHwvkftZpD6304391D" 
+              width="200" 
+              height="200"
+              alt="QRPh"
+            />
+          </svg>
+        </div>
+
+        <div class="payment-options">
+          <p><span>👤 Name</span> <strong>Ivan Troy Bandico</strong></p>
+          <p><span>🪙 Crypto</span> <span class="crypto-address">ivantroybandico.brave</span></p>
+        </div>
+
+        <p class="note">*QR code works with all Philippine banks & e-wallets supporting InstaPay</p>
+        <p class="note">*No extra transaction fees for QR donations</p>
+      </div>
+      <!-- ✅ END OF DONATION SECTION -->
+
+
+    </div>
+  </div>
+</body>
+</html>
