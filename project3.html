@@ -6,23 +6,43 @@
     <title>Payroll Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Print-only styles */
+        /* Print-only styles - FIXED */
         @media print {
-            body * {
-                visibility: hidden;
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
             }
-            .print-section, .print-section * {
-                visibility: visible;
+            body {
+                visibility: hidden;
+                background: white !important;
             }
             .print-section {
+                visibility: visible !important;
+                position: relative;
+                display: block !important;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white;
+                page-break-after: avoid;
+                margin-bottom: 2rem !important;
+            }
+            .page-break {
+                page-break-after: always;
+                clear: both;
+                display: block;
+                height: 0;
+            }
+            .no-print {
+                display: none !important;
+            }
+            #printArea {
+                visibility: visible !important;
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 100%;
-                page-break-after: always;
-            }
-            .no-print {
-                display: none !important;
             }
         }
         .preview-box {
@@ -32,12 +52,18 @@
             margin-bottom: 1rem;
             background-color: #f8fafc;
         }
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: 600;
+        }
     </style>
 </head>
-  <div class="container">
-
 <body class="bg-gray-50 min-h-screen p-6">
-    <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg p-8">
+    <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg p-8 relative">
         <a href="portfolio.html" class="back-link"><strong>←</strong></a>
         <h1 class="text-2xl font-bold text-center text-blue-700 mb-8 no-print">Payroll Engine</h1>
 
@@ -96,7 +122,7 @@
                 </label>
             </div>
             <p id="overrideNote" class="text-sm text-orange-600 mt-0 mb-3 hidden">⚠️ Override enabled: Any amount allowed, limits removed.</p>
-            <p class="text-sm text-blue-600 mt-0 mb-3">ℹ️ Leave box empty to use agency standard computation; Enter 0 if employee is non-contributing.</p>
+            <p class="text-sm text-blue-600 mt-0 mb-3">ℹ️ Leave box empty = use agency standard; Enter 0 = non-contributing; Enter value = use your amount</p>
             
             <div class="grid md:grid-cols-3 gap-4">
                 <!-- SSS -->
@@ -105,7 +131,7 @@
                     <input type="number" id="sssAmount" value="" step="0.01" class="w-full px-3 py-2 border rounded mb-2" placeholder="Default: Based on salary bracket">
                     <label class="block text-xs font-medium text-gray-600">Deduct on:</label>
                     <select id="sssHalf" class="w-full px-2 py-1 border rounded text-sm">
-                        <option value="both">Both Halves (split equally)</option>
+                        <option value="both" selected>Both Halves (split equally)</option>
                         <option value="first">1st Half Only</option>
                         <option value="second">2nd Half Only</option>
                     </select>
@@ -113,10 +139,10 @@
                 <!-- PhilHealth -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">PhilHealth Contribution (₱)</label>
-                    <input type="number" id="philHealthAmount" value="" step="0.01" class="w-full px-3 py-2 border rounded mb-2" placeholder="Default: 5% of basic / 2">
+                    <input type="number" id="philHealthAmount" value="" step="0.01" class="w-full px-3 py-2 border rounded mb-2" placeholder="Default: 5% of basic">
                     <label class="block text-xs font-medium text-gray-600">Deduct on:</label>
                     <select id="philHealthHalf" class="w-full px-2 py-1 border rounded text-sm">
-                        <option value="both">Both Halves (split equally)</option>
+                        <option value="both" selected>Both Halves (split equally)</option>
                         <option value="first">1st Half Only</option>
                         <option value="second">2nd Half Only</option>
                     </select>
@@ -127,7 +153,7 @@
                     <input type="number" id="pagibigAmount" value="" step="1" class="w-full px-3 py-2 border rounded mb-2" placeholder="Default: ₱200 max">
                     <label class="block text-xs font-medium text-gray-600">Deduct on:</label>
                     <select id="pagibigHalf" class="w-full px-2 py-1 border rounded text-sm">
-                        <option value="both">Both Halves (split equally)</option>
+                        <option value="both" selected>Both Halves (split equally)</option>
                         <option value="first">1st Half Only</option>
                         <option value="second">2nd Half Only</option>
                     </select>
@@ -248,8 +274,8 @@
             </div>
         </div>
 
-        <!-- Printable Area - FIXED: Content now properly rendered -->
-        <div id="printArea" class="hidden print-section">
+        <!-- Printable Area - FIXED -->
+        <div id="printArea" class="hidden">
             <div id="printContent"></div>
         </div>
     </div>
@@ -269,7 +295,6 @@
 
         // AGENCY STANDARD CONTRIBUTION RULES
         function getAgencySSS(basicSalary) {
-            // Simplified SSS table (standard 2024 rates)
             if (basicSalary <= 3250) return 135.00;
             if (basicSalary <= 3750) return 156.25;
             if (basicSalary <= 4250) return 177.50;
@@ -318,16 +343,14 @@
         }
 
         function getAgencyPhilHealth(basicSalary) {
-            // Standard 5% of basic salary, shared equally
-            return Math.min(basicSalary * 0.05, 5000); // Cap at ₱5000
+            return Math.min(basicSalary * 0.05, 5000); // 5% cap at ₱5000
         }
 
         function getAgencyPagIBIG(basicSalary) {
-            // Standard 2% of salary or max ₱200
-            return Math.min(basicSalary * 0.02, 200);
+            return Math.min(basicSalary * 0.02, 200); // 2% or max ₱200
         }
 
-        // Get contribution: use input if filled, else agency rule; input 0 = non-contributing
+        // Get contribution: use input if filled, else agency rule; 0 = non-contributing
         function getContribution(inputValue, agencyValue) {
             return (inputValue !== "" && !isNaN(inputValue)) ? Number(inputValue) : agencyValue;
         }
@@ -386,7 +409,6 @@
 
             // --- OPTION 1: GRADUATED TAX ---
             if (taxType === 'graduated') {
-                // Tax only on the amount exceeding ₱250,000
                 let taxableAmount = annualTaxable;
                 let taxDue = 0;
 
@@ -397,12 +419,11 @@
                     }
                     if (taxableAmount <= bracket.max) break;
                 }
-                return taxDue / 12; // convert annual tax to monthly
+                return taxDue / 12; // annual → monthly
             }
 
             // --- OPTION 2: 8% FLAT RATE ---
             if (taxType === '8percent') {
-                // 8% tax applies only once over ₱250K
                 return monthlyTaxable * 0.08;
             }
 
@@ -434,11 +455,11 @@
             // Contributions
             const totalContrib = contribs.sss + contribs.philHealth + contribs.pagibig;
 
-            // Taxable Income: Graduated = Gross - Contributions; 8% = Gross only
+            // Taxable Income
             const periodTaxable = taxType === 'graduated' ? (grossPay - totalContrib - otherDed) : (grossPay - otherDed);
-            const monthlyTaxable = periodTaxable * 2; // convert half-month to full-month equivalent
+            const monthlyTaxable = periodTaxable * 2;
             const monthlyTax = computeTax(monthlyTaxable, totalAnnualEarnings, taxType);
-            const taxWithheld = monthlyTax / 2; // split tax equally between halves
+            const taxWithheld = monthlyTax / 2;
 
             // Net Pay
             const netPay = grossPay - totalContrib - taxWithheld - otherDed;
@@ -455,7 +476,7 @@
         // Helper: Generate HTML for a single payslip
         function generatePayslipHTML(title, data, showTotal = false) {
             return `
-                <div class="border rounded-lg p-5 shadow-sm bg-white max-w-xl mx-auto mb-4 print-section">
+                <div class="print-section border rounded-lg p-5 shadow-sm bg-white max-w-xl mx-auto mb-4">
                     <h2 class="text-center font-bold text-xl mb-2">${empName}</h2>
                     <h3 class="text-lg font-bold text-center mb-3">${title}</h3>
                     <table class="w-full text-sm">
@@ -541,7 +562,7 @@
             document.getElementById('previewSection').classList.remove('hidden');
         }
 
-        // Print selected slips - FIXED: Content now properly visible
+        // ✅ FIXED PRINT FUNCTION - Now prints BOTH halves when selected
         function printSelected() {
             const printHalf1 = document.getElementById('printHalf1').checked;
             const printHalf2 = document.getElementById('printHalf2').checked;
@@ -550,25 +571,31 @@
             let content = '';
 
             if (printMode === 'together') {
-                // Print both in one page
+                // Print BOTH together
                 if (printHalf1) content += generatePayslipHTML(`1st Half (1–15 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half1);
                 if (printHalf2) content += generatePayslipHTML(`2nd Half (16–30/31 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half2, true);
             } else {
-                // Print separate pages (add page break)
-                if (printHalf1) content += generatePayslipHTML(`1st Half (1–15 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half1) + '<div style="page-break-after:always;"></div>';
-                if (printHalf2) content += generatePayslipHTML(`2nd Half (16–30/31 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half2, printHalf1 ? false : true);
+                // Print SEPARATE pages
+                if (printHalf1) {
+                    content += generatePayslipHTML(`1st Half (1–15 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half1);
+                    if (printHalf2) content += '<div class="page-break"></div>'; // page break only if both selected
+                }
+                if (printHalf2) {
+                    content += generatePayslipHTML(`2nd Half (16–30/31 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half2, !printHalf1); // show total only if single print
+                }
             }
 
-            // Put content into print area, make visible, then print
+            // Load and print
             const printArea = document.getElementById('printArea');
             printArea.classList.remove('hidden');
             document.getElementById('printContent').innerHTML = content;
             
-            // Trigger print and hide after
-            window.onbeforeprint = function() { printArea.style.display = 'block'; };
-            window.onafterprint = function() { printArea.classList.add('hidden'); };
-            
+            // Print and clean up
             window.print();
+            setTimeout(() => {
+                printArea.classList.add('hidden');
+                document.getElementById('printContent').innerHTML = '';
+            }, 500);
         }
 
         // Initialize
