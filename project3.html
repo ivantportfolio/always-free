@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payroll Engine</title>
+    <title>Payroll Engine - TRAIN Law Compliant</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Print-only styles - FIXED */
+        /* Print-only styles */
         @media print {
             * {
                 margin: 0;
@@ -101,8 +101,8 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Tax Type</label>
                 <select id="taxType" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-                    <option value="graduated">Graduated Tax Rates (TRAIN Law)</option>
-                    <option value="8percent">Optional 8% Flat Rate</option>
+                    <option value="graduated">Graduated Tax Rates (TRAIN Law) — Based on Net Income</option>
+                    <option value="8percent">Optional 8% Flat Rate — Based on Gross Income</option>
                 </select>
             </div>
             <div class="md:col-span-3">
@@ -112,7 +112,7 @@
             </div>
         </div>
 
-        <!-- Contribution Settings - Base on agency rules, override only if input exists -->
+        <!-- Contribution Settings -->
         <div class="bg-blue-50 p-5 rounded-lg mb-6 no-print">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="font-semibold text-lg text-blue-800">Contribution Settings (Agency Defaults / Override if filled)</h2>
@@ -122,7 +122,7 @@
                 </label>
             </div>
             <p id="overrideNote" class="text-sm text-orange-600 mt-0 mb-3 hidden">⚠️ Override enabled: Any amount allowed, limits removed.</p>
-            <p class="text-sm text-blue-600 mt-0 mb-3">ℹ️ Leave box empty = use agency standard; Enter 0 = non-contributing; Enter value = use your amount</p>
+            <p class="text-sm text-blue-600 mt-0 mb-3">ℹ️ Leave empty = use standard; 0 = non-contributing; Enter value = use your amount</p>
             
             <div class="grid md:grid-cols-3 gap-4">
                 <!-- SSS -->
@@ -161,7 +161,7 @@
             </div>
         </div>
 
-        <!-- Attendance & Overtime - Separate for Each Half -->
+        <!-- Attendance & Overtime -->
         <div class="bg-yellow-50 p-5 rounded-lg mb-6 no-print">
             <h2 class="font-semibold text-lg text-yellow-800 mb-4">Attendance & Overtime</h2>
             <div class="grid md:grid-cols-2 gap-6">
@@ -197,7 +197,7 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Absent (Days)</label>
-                            <input type="number" id="absentDays2" value="0" min="0" step="1" class="w-full px-3 py-2 border rounded">
+                            <input type="number" id="absentDays2" value="0" min="0" step="1" class="w-full px-4 py-2 border rounded">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Overtime (Hours)</label>
@@ -221,23 +221,18 @@
         <div id="previewSection" class="hidden mb-8 no-print">
             <h2 class="text-xl font-bold text-center text-gray-800 mb-4">Payslip Previews</h2>
             
-            <!-- Preview 1st Half -->
             <div class="preview-box">
                 <h3 class="font-bold text-blue-700 mb-2">1st Half Payslip Preview</h3>
                 <div id="previewHalf1"></div>
             </div>
 
-            <!-- Preview 2nd Half -->
             <div class="preview-box">
                 <h3 class="font-bold text-green-700 mb-2">2nd Half Payslip Preview</h3>
                 <div id="previewHalf2"></div>
             </div>
 
-            <!-- Print Options -->
             <div class="bg-gray-100 p-4 rounded-lg mt-6">
                 <h3 class="font-semibold text-lg mb-3">Print Options</h3>
-                
-                <!-- Print Mode -->
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Print Mode:</label>
                     <div class="flex gap-4">
@@ -247,12 +242,10 @@
                         </label>
                         <label class="inline-flex items-center gap-2">
                             <input type="radio" name="printMode" value="separate" class="w-4 h-4">
-                            <span>Print Halves Separately (each on own page)</span>
+                            <span>Print Halves Separately</span>
                         </label>
                     </div>
                 </div>
-
-                <!-- Select Which Slip(s) to Print -->
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Select Payslip(s) to Print:</label>
                     <div class="flex gap-4">
@@ -266,15 +259,13 @@
                         </label>
                     </div>
                 </div>
-
-                <!-- Print Button -->
                 <button onclick="printSelected()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition">
                     🖨️ Print Selected Payslip(s)
                 </button>
             </div>
         </div>
 
-        <!-- Printable Area - FIXED -->
+        <!-- Printable Area -->
         <div id="printArea" class="hidden">
             <div id="printContent"></div>
         </div>
@@ -291,9 +282,9 @@
             { min: 8000000, max: Infinity, rate: 0.35, base: 2202500 }
         ];
 
-        const TAX_EXEMPTION_THRESHOLD = 250000; // ₱250,000 annual tax-free
+        const TAX_EXEMPTION_THRESHOLD = 250000; // ₱250K annual tax-free
 
-        // AGENCY STANDARD CONTRIBUTION RULES
+        // Agency Contribution Rules
         function getAgencySSS(basicSalary) {
             if (basicSalary <= 3250) return 135.00;
             if (basicSalary <= 3750) return 156.25;
@@ -325,7 +316,7 @@
             if (basicSalary <= 16750) return 708.75;
             if (basicSalary <= 17250) return 730.00;
             if (basicSalary <= 17750) return 751.25;
-            if (basicSalary <= 18250) return 772.50;
+            if (  basicSalary <= 18250) return 772.50;
             if (basicSalary <= 18750) return 793.75;
             if (basicSalary <= 19250) return 815.00;
             if (basicSalary <= 19750) return 836.25;
@@ -339,50 +330,59 @@
             if (basicSalary <= 23750) return 1006.25;
             if (basicSalary <= 24250) return 1027.50;
             if (basicSalary <= 24750) return 1048.75;
-            return 1100.00; // Max contribution
+            return 1100.00;
         }
 
         function getAgencyPhilHealth(basicSalary) {
-            return Math.min(basicSalary * 0.05, 5000); // 5% cap at ₱5000
+            return Math.min(basicSalary * 0.05, 5000);
         }
 
         function getAgencyPagIBIG(basicSalary) {
-            return Math.min(basicSalary * 0.02, 200); // 2% or max ₱200
+            return Math.min(basicSalary * 0.02, 200);
         }
 
-        // Get contribution: use input if filled, else agency rule; 0 = non-contributing
         function getContribution(inputValue, agencyValue) {
             return (inputValue !== "" && !isNaN(inputValue)) ? Number(inputValue) : agencyValue;
         }
 
-        // Auto-update total annual earnings
+        // ✅ UPDATED: Exemption based on tax type
         function updateAnnualEarnings() {
             const monthlyBasic = parseFloat(document.getElementById('monthlyBasic').value) || 0;
             const monthCount = parseInt(document.getElementById('payMonth').value) || 1;
-            const total = monthlyBasic * monthCount;
+            const taxType = document.getElementById('taxType').value;
+            let total = 0;
+
+            if (taxType === '8percent') {
+                // 8%: exemption applied to GROSS income
+                total = monthlyBasic * monthCount;
+            } else {
+                // Graduated: exemption applied to NET income (estimate: gross - 10% approx contributions)
+                total = (monthlyBasic * 0.90) * monthCount;
+            }
+
             document.getElementById('totalAnnualEarnings').value = total.toFixed(2);
-            updateTaxStatus(total);
+            updateTaxStatus(total, taxType);
         }
 
-        // Update tax status message
-        function updateTaxStatus(totalEarnings) {
+        function updateTaxStatus(totalEarnings, taxType) {
             const statusEl = document.getElementById('taxStatus');
+            const baseText = taxType === '8percent' ? 'Gross Income' : 'Net Taxable Income';
+
             if (totalEarnings < TAX_EXEMPTION_THRESHOLD) {
                 const remaining = TAX_EXEMPTION_THRESHOLD - totalEarnings;
-                statusEl.textContent = `✅ Tax Delayed: Still within ₱250,000 exemption | Remaining: ₱${remaining.toFixed(2)}`;
+                statusEl.textContent = `✅ Tax Exempt: Annual ${baseText} below ₱250,000 | Remaining: ₱${remaining.toFixed(2)}`;
                 statusEl.className = "text-sm mt-1 font-medium text-blue-600";
             } else {
                 const excess = totalEarnings - TAX_EXEMPTION_THRESHOLD;
-                statusEl.textContent = `⚠️ Tax Active: Exceeded ₱250,000 threshold | Taxable amount: ₱${excess.toFixed(2)}`;
+                statusEl.textContent = `⚠️ Taxable: Annual ${baseText} exceeded ₱250,000 | Taxable excess: ₱${excess.toFixed(2)}`;
                 statusEl.className = "text-sm mt-1 font-medium text-red-600";
             }
         }
 
-        // Events for auto-update
         document.getElementById('payMonth').addEventListener('change', updateAnnualEarnings);
         document.getElementById('monthlyBasic').addEventListener('input', updateAnnualEarnings);
+        document.getElementById('taxType').addEventListener('change', updateAnnualEarnings);
 
-        // Toggle contribution override
         document.getElementById('overrideContrib').addEventListener('change', function() {
             const inputs = document.querySelectorAll('#sssAmount, #philHealthAmount, #pagibigAmount');
             const note = document.getElementById('overrideNote');
@@ -398,46 +398,48 @@
             }
         });
 
-        // ✅ Tax Delay Feature + Correct Calculation
-        function computeTax(monthlyTaxable, totalAnnualEarnings, taxType) {
-            const annualTaxable = monthlyTaxable * 12;
+        // ✅ TRAIN Law Compliant Tax Calculation
+        function computeTax(periodGross, periodContrib, periodOtherDed, totalAnnualEarnings, taxType) {
+            let periodTaxable, annualTaxable;
 
-            // --- TAX DELAY: NO TAX IF ANNUAL EARNINGS BELOW ₱250K ---
-            if (totalAnnualEarnings < TAX_EXEMPTION_THRESHOLD) {
-                return 0;
+            if (taxType === 'graduated') {
+                // GRADUATED: Taxable = Gross - SSS/PhilHealth/PagIBIG - Other Deductions
+                periodTaxable = periodGross - periodContrib - periodOtherDed;
+                annualTaxable = periodTaxable * 24; // half-month → annual
+            } else {
+                // 8% FLAT: Taxable = GROSS INCOME ONLY
+                periodTaxable = periodGross - periodOtherDed;
+                annualTaxable = periodTaxable * 24;
             }
 
-            // --- OPTION 1: GRADUATED TAX ---
-            if (taxType === 'graduated') {
-                let taxableAmount = annualTaxable;
-                let taxDue = 0;
+            // EXEMPTION RULE
+            if (annualTaxable < TAX_EXEMPTION_THRESHOLD) return 0;
 
+            if (taxType === 'graduated') {
+                let taxDue = 0;
                 for (const bracket of GRADUATED_TAX_TABLE) {
-                    if (taxableAmount > bracket.min) {
-                        const amountInBracket = Math.min(taxableAmount, bracket.max) - bracket.min;
+                    if (annualTaxable > bracket.min) {
+                        const amountInBracket = Math.min(annualTaxable, bracket.max) - bracket.min;
                         taxDue = bracket.base + (amountInBracket * bracket.rate);
                     }
-                    if (taxableAmount <= bracket.max) break;
+                    if (annualTaxable <= bracket.max) break;
                 }
-                return taxDue / 12; // annual → monthly
+                return taxDue / 24; // annual → half-month
             }
 
-            // --- OPTION 2: 8% FLAT RATE ---
             if (taxType === '8percent') {
-                return monthlyTaxable * 0.08;
+                return periodTaxable * 0.08;
             }
 
             return 0;
         }
 
-        // Helper: Get contribution amount for specific half
         function getContribAmount(totalAmount, halfOption, targetHalf) {
             if (halfOption === 'both') return totalAmount / 2;
             if (halfOption === targetHalf) return totalAmount;
             return 0;
         }
 
-        // Compute one half
         function computeHalf(halfName, lateMins, absentDays, otHours, otherDed, monthlyBasic, daysPerMonth, contribs, taxType, totalAnnualEarnings) {
             const dailyRate = monthlyBasic / daysPerMonth;
             const hourlyRate = dailyRate / 8;
@@ -445,23 +447,14 @@
             const otRate = hourlyRate * 1.25;
             const basicPay = monthlyBasic / 2;
 
-            // Deductions & Additions
             const lateDed = lateMins * minuteRate;
             const absentDed = absentDays * dailyRate;
             const otPay = otHours * otRate;
-
             const grossPay = basicPay - lateDed - absentDed + otPay;
 
-            // Contributions
             const totalContrib = contribs.sss + contribs.philHealth + contribs.pagibig;
+            const taxWithheld = computeTax(grossPay, totalContrib, otherDed, totalAnnualEarnings, taxType);
 
-            // Taxable Income
-            const periodTaxable = taxType === 'graduated' ? (grossPay - totalContrib - otherDed) : (grossPay - otherDed);
-            const monthlyTaxable = periodTaxable * 2;
-            const monthlyTax = computeTax(monthlyTaxable, totalAnnualEarnings, taxType);
-            const taxWithheld = monthlyTax / 2;
-
-            // Net Pay
             const netPay = grossPay - totalContrib - taxWithheld - otherDed;
 
             return {
@@ -473,7 +466,6 @@
 
         let half1, half2, payMonth, empName, totalAnnualEarnings;
 
-        // Helper: Generate HTML for a single payslip
         function generatePayslipHTML(title, data, showTotal = false) {
             return `
                 <div class="print-section border rounded-lg p-5 shadow-sm bg-white max-w-xl mx-auto mb-4">
@@ -488,20 +480,18 @@
                         <tr><td class="py-1 text-red-600">SSS Contribution</td><td class="text-right text-red-600">- ₱${data.sss.toFixed(2)}</td></tr>
                         <tr><td class="py-1 text-red-600">PhilHealth Contribution</td><td class="text-right text-red-600">- ₱${data.philHealth.toFixed(2)}</td></tr>
                         <tr><td class="py-1 text-red-600">Pag-IBIG Contribution</td><td class="text-right text-red-600">- ₱${data.pagibig.toFixed(2)}</td></tr>
-                        <tr><td class="py-1 text-red-600">Tax Withheld</td><td class="text-right text-red-600">- ₱${data.taxWithheld.toFixed(2)}</td></tr>
+                        <tr><td class="py-1 text-red-600">Tax Withheld <small class="text-gray-500">(TRAIN Law)</small></td><td class="text-right text-red-600">- ₱${data.taxWithheld.toFixed(2)}</td></tr>
                         <tr><td class="py-1 text-red-600">Other Deductions</td><td class="text-right text-red-600">- ₱${data.otherDed.toFixed(2)}</td></tr>
                         <tr class="font-bold text-lg border-t"><td class="py-2">Net Pay</td><td class="text-right border-t">₱${data.netPay.toFixed(2)}</td></tr>
                     </table>
                     ${showTotal ? `<div class="mt-4 p-3 bg-green-50 rounded text-center font-bold">
                         Monthly Total Net Pay: ₱${(half1.netPay + half2.netPay).toFixed(2)} | Total Tax: ₱${(half1.taxWithheld + half2.taxWithheld).toFixed(2)}
-                        <div class="text-sm font-normal mt-1">${totalAnnualEarnings < TAX_EXEMPTION_THRESHOLD ? '✅ Tax delayed — within ₱250K' : '⚠️ Tax applied — over ₱250K'}</div>
                     </div>` : ''}
                 </div>
             `;
         }
 
         function computePayroll() {
-            // Inputs
             empName = document.getElementById('empName').value || "Employee";
             const monthlyBasic = parseFloat(document.getElementById('monthlyBasic').value) || 0;
             const daysPerMonth = parseInt(document.getElementById('daysPerMonth').value) || 22;
@@ -509,7 +499,6 @@
             const taxType = document.getElementById('taxType').value;
             totalAnnualEarnings = parseFloat(document.getElementById('totalAnnualEarnings').value) || 0;
 
-            // --- CONTRIBUTION LOGIC: Agency default OR override if filled; 0 = non-contributing ---
             const inputSSS = document.getElementById('sssAmount').value;
             const inputPhilHealth = document.getElementById('philHealthAmount').value;
             const inputPagibig = document.getElementById('pagibigAmount').value;
@@ -522,7 +511,6 @@
             const philHealthHalfOpt = document.getElementById('philHealthHalf').value;
             const pagibigHalfOpt = document.getElementById('pagibigHalf').value;
 
-            // Get contribution per half
             const contrib1 = {
                 sss: getContribAmount(totalSSS, sssHalfOpt, 'first'),
                 philHealth: getContribAmount(totalPhilHealth, philHealthHalfOpt, 'first'),
@@ -534,7 +522,6 @@
                 pagibig: getContribAmount(totalPagibig, pagibigHalfOpt, 'second')
             };
 
-            // 1st Half Data
             half1 = computeHalf(
                 "1st Half",
                 parseFloat(document.getElementById('lateMins1').value) || 0,
@@ -544,7 +531,6 @@
                 monthlyBasic, daysPerMonth, contrib1, taxType, totalAnnualEarnings
             );
 
-            // 2nd Half Data
             half2 = computeHalf(
                 "2nd Half",
                 parseFloat(document.getElementById('lateMins2').value) || 0,
@@ -554,15 +540,11 @@
                 monthlyBasic, daysPerMonth, contrib2, taxType, totalAnnualEarnings
             );
 
-            // Show previews
             document.getElementById('previewHalf1').innerHTML = generatePayslipHTML(`1st Half (1–15 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half1);
             document.getElementById('previewHalf2').innerHTML = generatePayslipHTML(`2nd Half (16–30/31 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half2);
-            
-            // Show preview section
             document.getElementById('previewSection').classList.remove('hidden');
         }
 
-        // ✅ FIXED PRINT FUNCTION - Now prints BOTH halves when selected
         function printSelected() {
             const printHalf1 = document.getElementById('printHalf1').checked;
             const printHalf2 = document.getElementById('printHalf2').checked;
@@ -571,26 +553,22 @@
             let content = '';
 
             if (printMode === 'together') {
-                // Print BOTH together
                 if (printHalf1) content += generatePayslipHTML(`1st Half (1–15 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half1);
                 if (printHalf2) content += generatePayslipHTML(`2nd Half (16–30/31 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half2, true);
             } else {
-                // Print SEPARATE pages
                 if (printHalf1) {
                     content += generatePayslipHTML(`1st Half (1–15 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half1);
-                    if (printHalf2) content += '<div class="page-break"></div>'; // page break only if both selected
+                    if (printHalf2) content += '<div class="page-break"></div>';
                 }
                 if (printHalf2) {
-                    content += generatePayslipHTML(`2nd Half (16–30/31 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half2, !printHalf1); // show total only if single print
+                    content += generatePayslipHTML(`2nd Half (16–30/31 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half2, !printHalf1);
                 }
             }
 
-            // Load and print
             const printArea = document.getElementById('printArea');
             printArea.classList.remove('hidden');
             document.getElementById('printContent').innerHTML = content;
             
-            // Print and clean up
             window.print();
             setTimeout(() => {
                 printArea.classList.add('hidden');
@@ -598,7 +576,6 @@
             }, 500);
         }
 
-        // Initialize
         updateAnnualEarnings();
     </script>
 </body>
