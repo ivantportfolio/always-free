@@ -41,15 +41,20 @@
       line-height: 1.6;
     }
 
-    /* Grid layout for cards — responsive */
+    /* Grid layout updated for new arrangement */
     .sites-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: 1fr;
       gap: 1.8rem;
       margin-bottom: 3rem;
     }
+    .about-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.8rem;
+    }
 
-    /* Card style — consistent with all your sections */
+    /* Base Card style — consistent with all your sections */
     .site-card {
       background: white;
       border-radius: 14px;
@@ -83,6 +88,34 @@
       opacity: 0.85;
     }
 
+    /* Portfolio button — prominent */
+    .site-card.portfolio-card {
+      border-top-width: 6px;
+      background: var(--light);
+      box-shadow: 0 6px 16px rgba(13, 148, 136, 0.15);
+    }
+    .site-card.portfolio-card h3 {
+      font-size: 1.6rem;
+      font-weight: 800;
+    }
+
+    /* About buttons — smaller & less prominent */
+    .site-card.about-card {
+      opacity: 0.8;
+      border-top-width: 2px;
+    }
+    .site-card.about-card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .site-card.about-card p {
+      font-size: 0.9rem;
+      opacity: 0.75;
+    }
+    .site-card.about-card:hover {
+      opacity: 1;
+    }
+
     /* Footer styling — cohesive & elegant */
     .page-footer {
       text-align: center;
@@ -111,20 +144,24 @@
 
     <!-- Navigation Cards -->
     <div class="sites-grid">
-      <a href="portfolio.html" class="site-card">
+      <!-- Portfolio on top (full width) -->
+      <a href="portfolio.html" class="site-card portfolio-card">
         <h3>💼 Portfolio</h3>
         <p>Projects, work, and everything I’ve built and accomplished over time.</p>
       </a>
 
-      <a href="about-products.html" class="site-card">
-        <h3>📓 About the Products</h3>
-        <p>Look at what you can do with my projects.</p>
-      </a>
+      <!-- Two About cards below, side by side -->
+      <div class="about-row">
+        <a href="about-products.html" class="site-card about-card">
+          <h3>📓 About the Products</h3>
+          <p>Look at what you can do with my projects.</p>
+        </a>
 
-      <a href="about-me.html" class="site-card">
-        <h3>👤 About me</h3>
-        <p>Who I am, what I believe in, and all the ways you can connect or support me.</p>
-      </a>
+        <a href="about-me.html" class="site-card about-card">
+          <h3>👤 About me</h3>
+          <p>Who I am, what I believe in, and all the ways you can connect or support me.</p>
+        </a>
+      </div>
     </div>
 
     <!-- Footer -->
