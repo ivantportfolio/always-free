@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payroll Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Print-only styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-section, .print-section * {
+                visibility: visible;
+            }
+            .print-section {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                page-break-after: always;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+        .preview-box {
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen p-6">
+    <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg p-8">
+        <h1 class="text-2xl font-bold text-center text-blue-700 mb-8 no-print">Payroll Engine</h1>
+
+        <!-- Employee Information -->
+        <div class="grid md:grid-cols-3 gap-6 mb-6 no-print">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Employee Name</label>
+                <input type="text" id="empName" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="e.g. Juan Dela Cruz">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Monthly Basic Salary (₱)</label>
+                <input type="number" id="monthlyBasic" min="0" step="0.01" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="e.g. 30000">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Days per Month</label>
+                <input type="number" id="daysPerMonth" value="" min="1" max="31" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Month of Pay</label>
+                <select id="payMonth" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="1">January</option>
+                    <option value="2">February</option>
+                    <option value="3">March</option>
+                    <option value="4">April</option>
+                    <option value="5">May</option>
+                    <option value="6">June</option>
+                    <option value="7">July</option>
+                    <option value="8">August</option>
+                    <option value="9">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Tax Type</label>
+                <select id="taxType" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="graduated">Graduated Tax Rates (TRAIN Law)</option>
+                    <option value="8percent">Optional 8% Flat Rate</option>
+                </select>
+            </div>
+            <div class="md:col-span-3">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Total Earnings This Year (₱) <small class="text-gray-500">Auto-calculated</small></label>
+                <input type="number" id="totalAnnualEarnings" value="0" min="0" step="0.01" class="w-full px-4 py-2 border rounded-lg bg-gray-100" readonly>
+                <div id="taxStatus" class="text-sm mt-1 font-medium"></div>
+            </div>
+        </div>
+
+        <!-- Contribution Settings - Choose Half to Deduct -->
+        <div class="bg-blue-50 p-5 rounded-lg mb-6 no-print">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="font-semibold text-lg text-blue-800">Contribution Settings (₱ Amounts + Deduction Half)</h2>
+                <label class="inline-flex items-center gap-2">
+                    <input type="checkbox" id="overrideContrib" class="w-4 h-4 text-blue-600">
+                    <span class="text-sm font-medium text-gray-700">Override Default Values</span>
+                </label>
+            </div>
+            <p id="overrideNote" class="text-sm text-orange-600 mt-0 mb-3 hidden">⚠️ Override enabled: Any amount allowed, limits removed.</p>
+            
+            <div class="grid md:grid-cols-3 gap-4">
+                <!-- SSS -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">SSS Contribution (₱)</label>
+                    <input type="number" id="sssAmount" value="" step="0.01" class="w-full px-3 py-2 border rounded mb-2" required>
+                    <label class="block text-xs font-medium text-gray-600">Deduct on:</label>
+                    <select id="sssHalf" class="w-full px-2 py-1 border rounded text-sm">
+                        <option value="both">Both Halves (split equally)</option>
+                        <option value="first">1st Half Only</option>
+                        <option value="second">2nd Half Only</option>
+                    </select>
+                </div>
+                <!-- PhilHealth -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">PhilHealth Contribution (₱)</label>
+                    <input type="number" id="philHealthAmount" value="" step="0.01" class="w-full px-3 py-2 border rounded mb-2" required>
+                    <label class="block text-xs font-medium text-gray-600">Deduct on:</label>
+                    <select id="philHealthHalf" class="w-full px-2 py-1 border rounded text-sm">
+                        <option value="both">Both Halves (split equally)</option>
+                        <option value="first">1st Half Only</option>
+                        <option value="second">2nd Half Only</option>
+                    </select>
+                </div>
+                <!-- Pag-IBIG -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pag-IBIG Contribution (₱)</label>
+                    <input type="number" id="pagibigAmount" value="" step="1" class="w-full px-3 py-2 border rounded mb-2" required>
+                    <label class="block text-xs font-medium text-gray-600">Deduct on:</label>
+                    <select id="pagibigHalf" class="w-full px-2 py-1 border rounded text-sm">
+                        <option value="both">Both Halves (split equally)</option>
+                        <option value="first">1st Half Only</option>
+                        <option value="second">2nd Half Only</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance & Overtime - Separate for Each Half -->
+        <div class="bg-yellow-50 p-5 rounded-lg mb-6 no-print">
+            <h2 class="font-semibold text-lg text-yellow-800 mb-4">Attendance & Overtime</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- 1st Half -->
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <h3 class="font-semibold text-blue-700 mb-3">1st Half (1–15)</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Late (Minutes)</label>
+                            <input type="number" id="lateMins1" value="0" min="0" step="1" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Absent (Days)</label>
+                            <input type="number" id="absentDays1" value="0" min="0" step="1" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Overtime (Hours)</label>
+                            <input type="number" id="otHours1" value="0" min="0" step="0.5" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Other Deductions (₱)</label>
+                            <input type="number" id="otherDed1" value="0" min="0" step="0.01" class="w-full px-3 py-2 border rounded">
+                        </div>
+                    </div>
+                </div>
+                <!-- 2nd Half -->
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <h3 class="font-semibold text-green-700 mb-3">2nd Half (16–30/31)</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Late (Minutes)</label>
+                            <input type="number" id="lateMins2" value="0" min="0" step="1" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Absent (Days)</label>
+                            <input type="number" id="absentDays2" value="0" min="0" step="1" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Overtime (Hours)</label>
+                            <input type="number" id="otHours2" value="0" min="0" step="0.5" class="w-full px-3 py-2 border rounded">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Other Deductions (₱)</label>
+                            <input type="number" id="otherDed2" value="0" min="0" step="0.01" class="w-full px-3 py-2 border rounded">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculate Button -->
+        <button onclick="computePayroll()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition mb-4 no-print">
+            Calculate Payroll for Both Halves
+        </button>
+
+        <!-- Preview Section -->
+        <div id="previewSection" class="hidden mb-8 no-print">
+            <h2 class="text-xl font-bold text-center text-gray-800 mb-4">Payslip Previews</h2>
+            
+            <!-- Preview 1st Half -->
+            <div class="preview-box">
+                <h3 class="font-bold text-blue-700 mb-2">1st Half Payslip Preview</h3>
+                <div id="previewHalf1"></div>
+            </div>
+
+            <!-- Preview 2nd Half -->
+            <div class="preview-box">
+                <h3 class="font-bold text-green-700 mb-2">2nd Half Payslip Preview</h3>
+                <div id="previewHalf2"></div>
+            </div>
+
+            <!-- Print Options -->
+            <div class="bg-gray-100 p-4 rounded-lg mt-6">
+                <h3 class="font-semibold text-lg mb-3">Print Options</h3>
+                
+                <!-- Print Mode -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Print Mode:</label>
+                    <div class="flex gap-4">
+                        <label class="inline-flex items-center gap-2">
+                            <input type="radio" name="printMode" value="together" checked class="w-4 h-4">
+                            <span>Print Both Halves Together</span>
+                        </label>
+                        <label class="inline-flex items-center gap-2">
+                            <input type="radio" name="printMode" value="separate" class="w-4 h-4">
+                            <span>Print Halves Separately (each on own page)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Select Which Slip(s) to Print -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Payslip(s) to Print:</label>
+                    <div class="flex gap-4">
+                        <label class="inline-flex items-center gap-2">
+                            <input type="checkbox" id="printHalf1" checked class="w-4 h-4">
+                            <span>1st Half Only</span>
+                        </label>
+                        <label class="inline-flex items-center gap-2">
+                            <input type="checkbox" id="printHalf2" checked class="w-4 h-4">
+                            <span>2nd Half Only</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Print Button -->
+                <button onclick="printSelected()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition">
+                    🖨️ Print Selected Payslip(s)
+                </button>
+            </div>
+        </div>
+
+        <!-- Printable Area (Hidden on screen, visible only when printing) -->
+        <div id="printArea" class="hidden">
+            <div id="printContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // TRAIN Law Graduated Tax Table
+        const GRADUATED_TAX_TABLE = [
+            { min: 0, max: 250000, rate: 0.00, base: 0 },
+            { min: 250000, max: 400000, rate: 0.15, base: 0 },
+            { min: 400000, max: 800000, rate: 0.20, base: 22500 },
+            { min: 800000, max: 2000000, rate: 0.25, base: 102500 },
+            { min: 2000000, max: 8000000, rate: 0.30, base: 402500 },
+            { min: 8000000, max: Infinity, rate: 0.35, base: 2202500 }
+        ];
+
+        const TAX_EXEMPTION_THRESHOLD = 250000; // ₱250,000 annual tax-free
+
+        // Auto-update total annual earnings
+        function updateAnnualEarnings() {
+            const monthlyBasic = parseFloat(document.getElementById('monthlyBasic').value) || 0;
+            const monthCount = parseInt(document.getElementById('payMonth').value) || 1;
+            const total = monthlyBasic * monthCount;
+            document.getElementById('totalAnnualEarnings').value = total.toFixed(2);
+            updateTaxStatus(total);
+        }
+
+        // Update tax status message
+        function updateTaxStatus(totalEarnings) {
+            const statusEl = document.getElementById('taxStatus');
+            if (totalEarnings < TAX_EXEMPTION_THRESHOLD) {
+                const remaining = TAX_EXEMPTION_THRESHOLD - totalEarnings;
+                statusEl.textContent = `✅ Tax Delayed: Still within ₱250,000 exemption | Remaining: ₱${remaining.toFixed(2)}`;
+                statusEl.className = "text-sm mt-1 font-medium text-blue-600";
+            } else {
+                const excess = totalEarnings - TAX_EXEMPTION_THRESHOLD;
+                statusEl.textContent = `⚠️ Tax Active: Exceeded ₱250,000 threshold | Taxable amount: ₱${excess.toFixed(2)}`;
+                statusEl.className = "text-sm mt-1 font-medium text-red-600";
+            }
+        }
+
+        // Events for auto-update
+        document.getElementById('payMonth').addEventListener('change', updateAnnualEarnings);
+        document.getElementById('monthlyBasic').addEventListener('input', updateAnnualEarnings);
+
+        // Toggle contribution override
+        document.getElementById('overrideContrib').addEventListener('change', function() {
+            const inputs = document.querySelectorAll('#sssAmount, #philHealthAmount, #pagibigAmount');
+            const note = document.getElementById('overrideNote');
+            if (this.checked) {
+                inputs.forEach(el => { el.removeAttribute('min'); el.removeAttribute('max'); });
+                note.classList.remove('hidden');
+            } else {
+                document.getElementById('sssAmount').setAttribute('min','0');
+                document.getElementById('philHealthAmount').setAttribute('min','0');
+                document.getElementById('pagibigAmount').setAttribute('min','0');
+                document.getElementById('pagibigAmount').setAttribute('max','200');
+                note.classList.add('hidden');
+            }
+        });
+
+        // ✅ Tax Delay Feature + Correct Calculation
+        function computeTax(monthlyTaxable, totalAnnualEarnings, taxType) {
+            const annualTaxable = monthlyTaxable * 12;
+
+            // --- TAX DELAY: NO TAX IF ANNUAL EARNINGS BELOW ₱250K ---
+            if (totalAnnualEarnings < TAX_EXEMPTION_THRESHOLD) {
+                return 0;
+            }
+
+            // --- OPTION 1: GRADUATED TAX ---
+            if (taxType === 'graduated') {
+                // Tax only on the amount exceeding ₱250,000
+                let taxableAmount = annualTaxable;
+                let taxDue = 0;
+
+                for (const bracket of GRADUATED_TAX_TABLE) {
+                    if (taxableAmount > bracket.min) {
+                        const amountInBracket = Math.min(taxableAmount, bracket.max) - bracket.min;
+                        taxDue = bracket.base + (amountInBracket * bracket.rate);
+                    }
+                    if (taxableAmount <= bracket.max) break;
+                }
+                return taxDue / 12; // convert annual tax to monthly
+            }
+
+            // --- OPTION 2: 8% FLAT RATE ---
+            if (taxType === '8percent') {
+                // 8% tax applies only once over ₱250K
+                return monthlyTaxable * 0.08;
+            }
+
+            return 0;
+        }
+
+        // Helper: Get contribution amount for specific half
+        function getContribAmount(totalAmount, halfOption, targetHalf) {
+            if (halfOption === 'both') return totalAmount / 2;
+            if (halfOption === targetHalf) return totalAmount;
+            return 0;
+        }
+
+        // Compute one half
+        function computeHalf(halfName, lateMins, absentDays, otHours, otherDed, monthlyBasic, daysPerMonth, contribs, taxType, totalAnnualEarnings) {
+            const dailyRate = monthlyBasic / daysPerMonth;
+            const hourlyRate = dailyRate / 8;
+            const minuteRate = hourlyRate / 60;
+            const otRate = hourlyRate * 1.25;
+            const basicPay = monthlyBasic / 2;
+
+            // Deductions & Additions
+            const lateDed = lateMins * minuteRate;
+            const absentDed = absentDays * dailyRate;
+            const otPay = otHours * otRate;
+
+            const grossPay = basicPay - lateDed - absentDed + otPay;
+
+            // Contributions
+            const totalContrib = contribs.sss + contribs.philHealth + contribs.pagibig;
+
+            // Taxable Income: Graduated = Gross - Contributions; 8% = Gross only
+            const periodTaxable = taxType === 'graduated' ? (grossPay - totalContrib - otherDed) : (grossPay - otherDed);
+            const monthlyTaxable = periodTaxable * 2; // convert half-month to full-month equivalent
+            const monthlyTax = computeTax(monthlyTaxable, totalAnnualEarnings, taxType);
+            const taxWithheld = monthlyTax / 2; // split tax equally between halves
+
+            // Net Pay
+            const netPay = grossPay - totalContrib - taxWithheld - otherDed;
+
+            return {
+                basicPay, lateDed, absentDed, otPay, grossPay,
+                sss: contribs.sss, philHealth: contribs.philHealth, pagibig: contribs.pagibig,
+                taxWithheld, otherDed, netPay
+            };
+        }
+
+        let half1, half2, payMonth, empName, totalAnnualEarnings;
+
+        // Helper: Generate HTML for a single payslip
+        function generatePayslipHTML(title, data, showTotal = false) {
+            return `
+                <div class="border rounded-lg p-5 shadow-sm bg-white max-w-xl mx-auto mb-4">
+                    <h2 class="text-center font-bold text-xl mb-2">${empName}</h2>
+                    <h3 class="text-lg font-bold text-center mb-3">${title}</h3>
+                    <table class="w-full text-sm">
+                        <tr><td class="py-1">Basic Pay</td><td class="text-right">₱${data.basicPay.toFixed(2)}</td></tr>
+                        <tr><td class="py-1 text-red-600">Late Deduction</td><td class="text-right text-red-600">- ₱${data.lateDed.toFixed(2)}</td></tr>
+                        <tr><td class="py-1 text-red-600">Absent Deduction</td><td class="text-right text-red-600">- ₱${data.absentDed.toFixed(2)}</td></tr>
+                        <tr><td class="py-1 text-green-600">Overtime Pay</td><td class="text-right text-green-600">+ ₱${data.otPay.toFixed(2)}</td></tr>
+                        <tr class="font-medium"><td class="py-1 border-t">Gross Pay</td><td class="text-right border-t">₱${data.grossPay.toFixed(2)}</td></tr>
+                        <tr><td class="py-1 text-red-600">SSS Contribution</td><td class="text-right text-red-600">- ₱${data.sss.toFixed(2)}</td></tr>
+                        <tr><td class="py-1 text-red-600">PhilHealth Contribution</td><td class="text-right text-red-600">- ₱${data.philHealth.toFixed(2)}</td></tr>
+                        <tr><td class="py-1 text-red-600">Pag-IBIG Contribution</td><td class="text-right text-red-600">- ₱${data.pagibig.toFixed(2)}</td></tr>
+                        <tr><td class="py-1 text-red-600">Tax Withheld</td><td class="text-right text-red-600">- ₱${data.taxWithheld.toFixed(2)}</td></tr>
+                        <tr><td class="py-1 text-red-600">Other Deductions</td><td class="text-right text-red-600">- ₱${data.otherDed.toFixed(2)}</td></tr>
+                        <tr class="font-bold text-lg border-t"><td class="py-2">Net Pay</td><td class="text-right border-t">₱${data.netPay.toFixed(2)}</td></tr>
+                    </table>
+                    ${showTotal ? `<div class="mt-4 p-3 bg-green-50 rounded text-center font-bold">
+                        Monthly Total Net Pay: ₱${(half1.netPay + half2.netPay).toFixed(2)} | Total Tax: ₱${(half1.taxWithheld + half2.taxWithheld).toFixed(2)}
+                        <div class="text-sm font-normal mt-1">${totalAnnualEarnings < TAX_EXEMPTION_THRESHOLD ? '✅ Tax delayed — within ₱250K' : '⚠️ Tax applied — over ₱250K'}</div>
+                    </div>` : ''}
+                </div>
+            `;
+        }
+
+        function computePayroll() {
+            // Inputs
+            empName = document.getElementById('empName').value || "Employee";
+            const monthlyBasic = parseFloat(document.getElementById('monthlyBasic').value) || 0;
+            const daysPerMonth = parseInt(document.getElementById('daysPerMonth').value) || 22;
+            payMonth = parseInt(document.getElementById('payMonth').value);
+            const taxType = document.getElementById('taxType').value;
+            totalAnnualEarnings = parseFloat(document.getElementById('totalAnnualEarnings').value) || 0;
+
+            // Contribution values & half selection
+            const totalSSS = parseFloat(document.getElementById('sssAmount').value) || 0;
+            const totalPhilHealth = parseFloat(document.getElementById('philHealthAmount').value) || 0;
+            const totalPagibig = parseFloat(document.getElementById('pagibigAmount').value) || 0;
+
+            const sssHalfOpt = document.getElementById('sssHalf').value;
+            const philHealthHalfOpt = document.getElementById('philHealthHalf').value;
+            const pagibigHalfOpt = document.getElementById('pagibigHalf').value;
+
+            // Get contribution per half
+            const contrib1 = {
+                sss: getContribAmount(totalSSS, sssHalfOpt, 'first'),
+                philHealth: getContribAmount(totalPhilHealth, philHealthHalfOpt, 'first'),
+                pagibig: getContribAmount(totalPagibig, pagibigHalfOpt, 'first')
+            };
+            const contrib2 = {
+                sss: getContribAmount(totalSSS, sssHalfOpt, 'second'),
+                philHealth: getContribAmount(totalPhilHealth, philHealthHalfOpt, 'second'),
+                pagibig: getContribAmount(totalPagibig, pagibigHalfOpt, 'second')
+            };
+
+            // 1st Half Data
+            half1 = computeHalf(
+                "1st Half",
+                parseFloat(document.getElementById('lateMins1').value) || 0,
+                parseFloat(document.getElementById('absentDays1').value) || 0,
+                parseFloat(document.getElementById('otHours1').value) || 0,
+                parseFloat(document.getElementById('otherDed1').value) || 0,
+                monthlyBasic, daysPerMonth, contrib1, taxType, totalAnnualEarnings
+            );
+
+            // 2nd Half Data
+            half2 = computeHalf(
+                "2nd Half",
+                parseFloat(document.getElementById('lateMins2').value) || 0,
+                parseFloat(document.getElementById('absentDays2').value) || 0,
+                parseFloat(document.getElementById('otHours2').value) || 0,
+                parseFloat(document.getElementById('otherDed2').value) || 0,
+                monthlyBasic, daysPerMonth, contrib2, taxType, totalAnnualEarnings
+            );
+
+            // Show previews
+            document.getElementById('previewHalf1').innerHTML = generatePayslipHTML(`1st Half (1–15 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half1);
+            document.getElementById('previewHalf2').innerHTML = generatePayslipHTML(`2nd Half (16–30/31 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half2);
+            
+            // Show preview section
+            document.getElementById('previewSection').classList.remove('hidden');
+        }
+
+        // Print selected slips
+        function printSelected() {
+            const printHalf1 = document.getElementById('printHalf1').checked;
+            const printHalf2 = document.getElementById('printHalf2').checked;
+            const printMode = document.querySelector('input[name="printMode"]:checked').value;
+
+            let content = '';
+
+            if (printMode === 'together') {
+                // Print both in one page
+                if (printHalf1) content += generatePayslipHTML(`1st Half (1–15 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half1);
+                if (printHalf2) content += generatePayslipHTML(`2nd Half (16–30/31 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half2, true);
+            } else {
+                // Print separate pages (add page break)
+                if (printHalf1) content += generatePayslipHTML(`1st Half (1–15 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half1) + '<div style="page-break-after:always;"></div>';
+                if (printHalf2) content += generatePayslipHTML(`2nd Half (16–30/31 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half2, printHalf1 ? false : true);
+            }
+
+            // Put content into print area and print
+            document.getElementById('printContent').innerHTML = content;
+            window.print();
+        }
+
+        // Initialize
+        updateAnnualEarnings();
+    </script>
+</body>
+</html>
