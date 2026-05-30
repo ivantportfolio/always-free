@@ -53,7 +53,7 @@
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Days per Month</label>
-                <input type="number" id="daysPerMonth" value="" min="1" max="31" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                <input type="number" id="daysPerMonth" value="22" min="1" max="31" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Month of Pay</label>
@@ -86,22 +86,23 @@
             </div>
         </div>
 
-        <!-- Contribution Settings - Choose Half to Deduct -->
+        <!-- Contribution Settings - Base on agency rules, override only if input exists -->
         <div class="bg-blue-50 p-5 rounded-lg mb-6 no-print">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="font-semibold text-lg text-blue-800">Contribution Settings (₱ Amounts + Deduction Half)</h2>
+                <h2 class="font-semibold text-lg text-blue-800">Contribution Settings (Agency Defaults / Override if filled)</h2>
                 <label class="inline-flex items-center gap-2">
                     <input type="checkbox" id="overrideContrib" class="w-4 h-4 text-blue-600">
-                    <span class="text-sm font-medium text-gray-700">Override Default Values</span>
+                    <span class="text-sm font-medium text-gray-700">Override All Defaults</span>
                 </label>
             </div>
             <p id="overrideNote" class="text-sm text-orange-600 mt-0 mb-3 hidden">⚠️ Override enabled: Any amount allowed, limits removed.</p>
+            <p class="text-sm text-blue-600 mt-0 mb-3">ℹ️ Leave box empty to use agency standard computation; Enter 0 if employee is non-contributing.</p>
             
             <div class="grid md:grid-cols-3 gap-4">
                 <!-- SSS -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">SSS Contribution (₱)</label>
-                    <input type="number" id="sssAmount" value="" step="0.01" class="w-full px-3 py-2 border rounded mb-2" required>
+                    <input type="number" id="sssAmount" value="" step="0.01" class="w-full px-3 py-2 border rounded mb-2" placeholder="Default: Based on salary bracket">
                     <label class="block text-xs font-medium text-gray-600">Deduct on:</label>
                     <select id="sssHalf" class="w-full px-2 py-1 border rounded text-sm">
                         <option value="both">Both Halves (split equally)</option>
@@ -112,7 +113,7 @@
                 <!-- PhilHealth -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">PhilHealth Contribution (₱)</label>
-                    <input type="number" id="philHealthAmount" value="" step="0.01" class="w-full px-3 py-2 border rounded mb-2" required>
+                    <input type="number" id="philHealthAmount" value="" step="0.01" class="w-full px-3 py-2 border rounded mb-2" placeholder="Default: 5% of basic / 2">
                     <label class="block text-xs font-medium text-gray-600">Deduct on:</label>
                     <select id="philHealthHalf" class="w-full px-2 py-1 border rounded text-sm">
                         <option value="both">Both Halves (split equally)</option>
@@ -123,7 +124,7 @@
                 <!-- Pag-IBIG -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Pag-IBIG Contribution (₱)</label>
-                    <input type="number" id="pagibigAmount" value="" step="1" class="w-full px-3 py-2 border rounded mb-2" required>
+                    <input type="number" id="pagibigAmount" value="" step="1" class="w-full px-3 py-2 border rounded mb-2" placeholder="Default: ₱200 max">
                     <label class="block text-xs font-medium text-gray-600">Deduct on:</label>
                     <select id="pagibigHalf" class="w-full px-2 py-1 border rounded text-sm">
                         <option value="both">Both Halves (split equally)</option>
@@ -247,8 +248,8 @@
             </div>
         </div>
 
-        <!-- Printable Area (Hidden on screen, visible only when printing) -->
-        <div id="printArea" class="hidden">
+        <!-- Printable Area - FIXED: Content now properly rendered -->
+        <div id="printArea" class="hidden print-section">
             <div id="printContent"></div>
         </div>
     </div>
@@ -265,6 +266,71 @@
         ];
 
         const TAX_EXEMPTION_THRESHOLD = 250000; // ₱250,000 annual tax-free
+
+        // AGENCY STANDARD CONTRIBUTION RULES
+        function getAgencySSS(basicSalary) {
+            // Simplified SSS table (standard 2024 rates)
+            if (basicSalary <= 3250) return 135.00;
+            if (basicSalary <= 3750) return 156.25;
+            if (basicSalary <= 4250) return 177.50;
+            if (basicSalary <= 4750) return 198.75;
+            if (basicSalary <= 5250) return 220.00;
+            if (basicSalary <= 5750) return 241.25;
+            if (basicSalary <= 6250) return 262.50;
+            if (basicSalary <= 6750) return 283.75;
+            if (basicSalary <= 7250) return 305.00;
+            if (basicSalary <= 7750) return 326.25;
+            if (basicSalary <= 8250) return 347.50;
+            if (basicSalary <= 8750) return 368.75;
+            if (basicSalary <= 9250) return 390.00;
+            if (basicSalary <= 9750) return 411.25;
+            if (basicSalary <= 10250) return 432.50;
+            if (basicSalary <= 10750) return 453.75;
+            if (basicSalary <= 11250) return 475.00;
+            if (basicSalary <= 11750) return 496.25;
+            if (basicSalary <= 12250) return 517.50;
+            if (basicSalary <= 12750) return 538.75;
+            if (basicSalary <= 13250) return 560.00;
+            if (basicSalary <= 13750) return 581.25;
+            if (basicSalary <= 14250) return 602.50;
+            if (basicSalary <= 14750) return 623.75;
+            if (basicSalary <= 15250) return 645.00;
+            if (basicSalary <= 15750) return 666.25;
+            if (basicSalary <= 16250) return 687.50;
+            if (basicSalary <= 16750) return 708.75;
+            if (basicSalary <= 17250) return 730.00;
+            if (basicSalary <= 17750) return 751.25;
+            if (basicSalary <= 18250) return 772.50;
+            if (basicSalary <= 18750) return 793.75;
+            if (basicSalary <= 19250) return 815.00;
+            if (basicSalary <= 19750) return 836.25;
+            if (basicSalary <= 20250) return 857.50;
+            if (basicSalary <= 20750) return 878.75;
+            if (basicSalary <= 21250) return 900.00;
+            if (basicSalary <= 21750) return 921.25;
+            if (basicSalary <= 22250) return 942.50;
+            if (basicSalary <= 22750) return 963.75;
+            if (basicSalary <= 23250) return 985.00;
+            if (basicSalary <= 23750) return 1006.25;
+            if (basicSalary <= 24250) return 1027.50;
+            if (basicSalary <= 24750) return 1048.75;
+            return 1100.00; // Max contribution
+        }
+
+        function getAgencyPhilHealth(basicSalary) {
+            // Standard 5% of basic salary, shared equally
+            return Math.min(basicSalary * 0.05, 5000); // Cap at ₱5000
+        }
+
+        function getAgencyPagIBIG(basicSalary) {
+            // Standard 2% of salary or max ₱200
+            return Math.min(basicSalary * 0.02, 200);
+        }
+
+        // Get contribution: use input if filled, else agency rule; input 0 = non-contributing
+        function getContribution(inputValue, agencyValue) {
+            return (inputValue !== "" && !isNaN(inputValue)) ? Number(inputValue) : agencyValue;
+        }
 
         // Auto-update total annual earnings
         function updateAnnualEarnings() {
@@ -389,7 +455,7 @@
         // Helper: Generate HTML for a single payslip
         function generatePayslipHTML(title, data, showTotal = false) {
             return `
-                <div class="border rounded-lg p-5 shadow-sm bg-white max-w-xl mx-auto mb-4">
+                <div class="border rounded-lg p-5 shadow-sm bg-white max-w-xl mx-auto mb-4 print-section">
                     <h2 class="text-center font-bold text-xl mb-2">${empName}</h2>
                     <h3 class="text-lg font-bold text-center mb-3">${title}</h3>
                     <table class="w-full text-sm">
@@ -422,10 +488,14 @@
             const taxType = document.getElementById('taxType').value;
             totalAnnualEarnings = parseFloat(document.getElementById('totalAnnualEarnings').value) || 0;
 
-            // Contribution values & half selection
-            const totalSSS = parseFloat(document.getElementById('sssAmount').value) || 0;
-            const totalPhilHealth = parseFloat(document.getElementById('philHealthAmount').value) || 0;
-            const totalPagibig = parseFloat(document.getElementById('pagibigAmount').value) || 0;
+            // --- CONTRIBUTION LOGIC: Agency default OR override if filled; 0 = non-contributing ---
+            const inputSSS = document.getElementById('sssAmount').value;
+            const inputPhilHealth = document.getElementById('philHealthAmount').value;
+            const inputPagibig = document.getElementById('pagibigAmount').value;
+
+            const totalSSS = getContribution(inputSSS, getAgencySSS(monthlyBasic));
+            const totalPhilHealth = getContribution(inputPhilHealth, getAgencyPhilHealth(monthlyBasic));
+            const totalPagibig = getContribution(inputPagibig, getAgencyPagIBIG(monthlyBasic));
 
             const sssHalfOpt = document.getElementById('sssHalf').value;
             const philHealthHalfOpt = document.getElementById('philHealthHalf').value;
@@ -471,7 +541,7 @@
             document.getElementById('previewSection').classList.remove('hidden');
         }
 
-        // Print selected slips
+        // Print selected slips - FIXED: Content now properly visible
         function printSelected() {
             const printHalf1 = document.getElementById('printHalf1').checked;
             const printHalf2 = document.getElementById('printHalf2').checked;
@@ -489,8 +559,15 @@
                 if (printHalf2) content += generatePayslipHTML(`2nd Half (16–30/31 ${new Date(0, payMonth-1).toLocaleString('default', { month: 'long' })})`, half2, printHalf1 ? false : true);
             }
 
-            // Put content into print area and print
+            // Put content into print area, make visible, then print
+            const printArea = document.getElementById('printArea');
+            printArea.classList.remove('hidden');
             document.getElementById('printContent').innerHTML = content;
+            
+            // Trigger print and hide after
+            window.onbeforeprint = function() { printArea.style.display = 'block'; };
+            window.onafterprint = function() { printArea.classList.add('hidden'); };
+            
             window.print();
         }
 
