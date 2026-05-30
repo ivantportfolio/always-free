@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes & Ideas | ivantroybandico.brave</title>
+  <link rel="stylesheet" href="../../style.css">
+  <style>
+    /* Matches your global theme */
+    :root {
+      --primary: #0D9488;
+      --secondary: #34D399;
+      --accent: #059669;
+      --light: #F0FDF4;
+      --neutral: #F3F4F6;
+      --dark: #1F2937;
+      --gray: #6B7280;
+    }
+
+    /* Section card style — consistent with other pages */
+    .note-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.8rem;
+      margin: 1.5rem 0;
+      border-left: 4px solid var(--secondary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .note-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,00.08);
+    }
+
+    .note-card h3 {
+      color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .note-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .note-list li {
+      position: relative;
+      padding: 0.4rem 0 0.4rem 1.5rem;
+      color: var(--dark);
+      line-height: 1.6;
+    }
+    .note-list li::before {
+      content: "•";
+      color: var(--accent);
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+
+    .highlight-box {
+      background: var(--light);
+      border-radius: 10px;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0;
+      border: 1px solid rgba(13, 148, 136, 0.1);
+    }
+
+    .coming-soon {
+      background: linear-gradient(to right, var(--light), #f0fdfa);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--accent);
+      font-weight: 500;
+      font-style: italic;
+      margin-top: 2rem;
+      border: 1px dashed var(--secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="/" class="back-link">← Back to Home</a>
+
+    <div class="page-content">
+      <h1 style="color: var(--primary); font-size: 2rem; font-weight: 700;">Notes & Ideas</h1>
+      <hr style="margin: 1rem 0; border-color: var(--light); border-width: 2px;">
+
+      <!-- Philippine Taxes Section -->
+      <div class="note-card">
+        <h3>📌 Philippine Taxes & Payroll Tools</h3>
+        <div class="highlight-box">
+          <ul class="note-list">
+            <li>Solve and compute your taxes easily</li>
+            <li>Accurately calculate upcoming salary & income tax</li>
+            <li>Generate and print professional payslips</li>
+            <li>Stay compliant with BIR regulations</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Free Access Section -->
+      <div class="note-card">
+        <h3>💡 100% Free Access</h3>
+        <div class="highlight-box">
+          <ul class="note-list">
+            <li>No more manual or self-computations — save time</li>
+            <li>Simple interface: just click, enter details, and done</li>
+            <li>Download or print official-style payslips instantly</li>
+            <li>No hidden fees, no subscriptions — forever free</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Coming Soon -->
+      <div class="coming-soon">
+        ✨ All these tools, guides, and more features are coming very soon.<br>
+        Stay tuned — more helpful resources on the way!
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
