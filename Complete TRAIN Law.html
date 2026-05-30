@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Complete TRAIN Law Tax Calculator</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body{
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f9;
+    margin:0;
+    padding:20px;
+  }
+
+  .container{
+    max-width:1100px;
+    margin:auto;
+    background:#ffffff;
+    padding:30px;
+    border-radius:14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  }
+
+  h1{
+    text-align:center;
+    color:#003366;
+    margin-bottom:10px;
+    font-size:24px;
+  }
+
+  .subtitle {
+    text-align:center;
+    color:#666;
+    font-size:14px;
+    margin-bottom:25px;
+  }
+
+  label{
+    display:block;
+    margin-top:16px;
+    margin-bottom:6px;
+    font-weight:600;
+    color:#333;
+  }
+
+  input, select{
+    width:100%;
+    padding:12px 14px;
+    border-radius:8px;
+    border:1px solid #ccd6e0;
+    font-size:16px;
+    background-color:#fff;
+    transition: border 0.2s;
+  }
+
+  input:focus, select:focus{
+    outline:none;
+    border-color:#0066cc;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap:14px;
+    margin-top:8px;
+  }
+
+  .note-box {
+    background-color: #eaf4ff;
+    border-left:4px solid #0066cc;
+    padding:12px 16px;
+    border-radius:6px;
+    margin:12px 0;
+    font-size:14px;
+    color:#004c99;
+    line-height:1.5;
+  }
+
+  .warning-note{
+    background-color: #fff3cd;
+    border-left:4px solid #ffc107;
+    color:#856404;
+  }
+
+  .disabled-note{
+    color:#b00020;
+    font-size:13px;
+    margin-top:6px;
+  }
+
+  .result{
+    margin-top:24px;
+    background-color:#eef5ff;
+    padding:22px 26px;
+    border-radius:12px;
+    display:none;
+  }
+
+  .result h3{
+    color:#003366;
+    margin-top:0;
+    margin-bottom:16px;
+    font-size:18px;
+  }
+
+  .line{
+    display:flex;
+    justify-content:space-between;
+    padding:6px 0;
+    font-size:15px;
+  }
+
+  .line.total-contrib {
+    font-weight:600;
+    color:#004c99;
+  }
+
+  .line.net{
+    font-size:22px;
+    font-weight:bold;
+    color:#00882b;
+    border-top:1px solid #bcd2e8;
+    padding-top:12px;
+    margin-top:4px;
+  }
+
+  hr {
+    border: none;
+    border-top:1px solid #dde6f0;
+    margin:20px 0;
+  }
+
+  .section-heading {
+    font-size:17px;
+    font-weight: bold;
+    color:#003366;
+    margin:24px 0 10px;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🇵🇭 Complete TRAIN Law Tax Calculator</h1>
+<div class="subtitle">Covers ALL Income Types: Employee, Self-Employed, Professional, Business, Mixed Income Earner</div>
+
+<label>Annual Gross Income / Sales / Receipts (₱)</label>
+<input type="number" id="annualGross" placeholder="e.g. 360000" oninput="calculate()">
+
+<label>Income Earner Type</label>
+<select id="earnerType" onchange="calculate()">
+  <option value="employee">Employee (Private / Government)</option>
+  <option value="self">Self-Employed / Professional</option>
+  <option value="business">Sole Proprietor / Business Owner</option>
+  <option value="mixed_emp">Mixed Income Earner: Employee + Business</option>
+  <option value="mixed_self">Mixed Income Earner: Self-Employed + Business</option>
+</select>
+
+<label>Income Tax Option</label>
+<select id="taxType" onchange="calculate()">
+  <option value="graduated">Graduated Income Tax Table (Default)</option>
+  <option value="8percent">8% Flat Income Tax Rate (Optional)</option>
+</select>
+
+<div id="taxNote" class="disabled-note"></div>
+
+<div class="note-box">
+  ✅ <strong>TRAIN Law — All Rules Applied:</strong><br>
+  • <strong>Tax Exemption:</strong> First ₱250,000 annual income is tax-free for all earners.<br>
+  • <strong>8% Option Eligibility:</strong> Only for Self-Employed / Business / Mixed Income earners with <strong>Annual Gross ≤ ₱3 Million</strong>.<br>
+  • <strong>Graduated Tax:</strong> Applicable to ALL earners; Taxable = Gross - Deductions/Contributions.<br>
+  • <strong>Mixed Income:</strong> Employee income taxed separately; Business/Self portion can choose 8% or Graduated.<br>
+  • <strong>Contributions:</strong> SSS, PhilHealth, Pag-IBIG computed correctly per earner type.
+</div>
+
+<div class="note-box warning-note">
+  ⚠️ <strong>Restriction:</strong> Employees <u>cannot</u> use 8% flat rate — Graduated Tax only.
+</div>
+
+<div class="section-heading">Override Contributions (Optional — Enter Monthly Amount)</div>
+<div class="grid">
+  <div>
+    <input id="sssInput" type="number" placeholder="SSS Amount (Monthly)" oninput="calculate()">
+  </div>
+  <div>
+    <input id="philInput" type="number" placeholder="PhilHealth Amount (Monthly)" oninput="calculate()">
+  </div>
+  <div>
+    <input id="pagibigInput" type="number" placeholder="Pag-IBIG Amount (Monthly)" oninput="calculate()">
+  </div>
+</div>
+<div style="font-size:12px; color:#666; margin-top:4px;">* Leave empty to use statutory rates; values entered here are multiplied by 12 for annual computation</div>
+
+<div class="result" id="result">
+
+  <h3>📊 Annual Tax Computation Summary</h3>
+
+  <div class="line"><span>Total Annual Gross Income</span><span id="g"></span></div>
+  <div class="line"><span>SSS Contribution (Annual)</span><span id="s"></span></div>
+  <div class="line"><span>PhilHealth Contribution (Annual)</span><span id="p"></span></div>
+  <div class="line"><span>Pag-IBIG Contribution (Annual)</span><span id="pi"></span></div>
+
+  <div class="line total-contrib"><span>Total Statutory Contributions</span><span id="c"></span></div>
+  <div class="line"><span>Allowable Deduction (₱250K or Actual)</span><span id="ded"></span></div>
+  <div class="line"><span>Taxable Income</span><span id="t"></span></div>
+  <div class="line"><span>Income Tax Due</span><span id="tx"></span></div>
+
+  <div class="line net"><span>📌 Net Annual Income</span><span id="n"></span></div>
+
+  <hr>
+
+  <h3>📅 Monthly Equivalent</h3>
+  <div class="line"><span>Monthly Net Income</span><span id="mn"></span></div>
+
+</div>
+
+</div>
+
+<script>
+
+function money(x){
+  return "₱ " + x.toLocaleString('en-PH', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function calculate(){
+
+  let annualGross = parseFloat(document.getElementById("annualGross").value);
+  let earnerType = document.getElementById("earnerType").value;
+  let taxType = document.getElementById("taxType").value;
+
+  if(!annualGross || annualGross <= 0){
+    document.getElementById("result").style.display = "none";
+    return;
+  }
+
+  let note = "";
+  const taxSelect = document.getElementById("taxType");
+
+  // ==========================================
+  // ✅ ELIGIBILITY RULES FOR ALL TYPES
+  // ==========================================
+  const isEmployee = earnerType === "employee";
+  const isSelfOrBus = ["self", "business"].includes(earnerType);
+  const isMixed = earnerType.startsWith("mixed_");
+
+  const allowed8Percent = !isEmployee && annualGross <= 3000000;
+
+  // Handle invalid selection
+  if (!allowed8Percent) {
+    if (taxType === "8percent") {
+      taxType = "graduated";
+      taxSelect.value = "graduated";
+    }
+    taxSelect.options[1].disabled = true;
+
+    if (isEmployee) {
+      note = "⚠️ 8% rate NOT allowed: Employees must use Graduated Tax Table.";
+    } else if (annualGross > 3000000) {
+      note = "⚠️ 8% rate NOT allowed: Annual gross exceeds ₱3,000,000 — Graduated Tax applies.";
+    }
+  } else {
+    taxSelect.options[1].disabled = false;
+  }
+  document.getElementById("taxNote").innerText = note;
+
+  // ==========================================
+  // ✅ CONTRIBUTIONS — Override now accepts MONTHLY values
+  // ==========================================
+  const sssInput = document.getElementById("sssInput").value;
+  const philInput = document.getElementById("philInput").value;
+  const pagibigInput = document.getElementById("pagibigInput").value;
+
+  let monthlyGross = annualGross / 12;
+
+  // --- SSS ---
+  let sss;
+  if (sssInput !== "") {
+    // Convert user-entered monthly value to annual
+    sss = parseFloat(sssInput) * 12;
+  } else {
+    const mscCap = 30000; // Monthly MSC cap
+    const sssBase = Math.min(monthlyGross, mscCap);
+    const sssRate = isEmployee ? 0.045 : 0.11;
+    sss = sssBase * sssRate * 12;
+  }
+
+  // --- PhilHealth ---
+  let phil;
+  if (philInput !== "") {
+    // Convert user-entered monthly value to annual
+    phil = parseFloat(philInput) * 12;
+  } else {
+    const floor = 10000;
+    const ceiling = 100000;
+    const philBase = Math.max(floor, Math.min(monthlyGross, ceiling));
+    const philRate = isEmployee ? 0.025 : 0.05; // Employee pays half
+    phil = philBase * philRate * 12;
+  }
+
+  // --- Pag-IBIG ---
+  let pagibig;
+  if (pagibigInput !== "") {
+    // Convert user-entered monthly value to annual
+    pagibig = parseFloat(pagibigInput) * 12;
+  } else {
+    const baseCap = 10000;
+    const pagibigBase = Math.min(monthlyGross, baseCap);
+    pagibig = pagibigBase * 0.02 * 12; // Max ₱200/month
+  }
+
+  const totalContrib = sss + phil + pagibig;
+
+  // ==========================================
+  // ✅ DEDUCTION RULES
+  // ==========================================
+  let allowableDeduction;
+
+  if (taxType === "8percent") {
+    // 8%: NO deductions except ₱250,000 exemption
+    allowableDeduction = 250000;
+  } else {
+    // Graduated: Choose between Itemized or Optional Standard Deduction (OSD)
+    if (isEmployee) {
+      // Employees: Only contributions + ₱250K exemption
+      allowableDeduction = totalContrib + 250000;
+    } else {
+      // Self/Business/Mixed: OSD = 40% of Gross OR Itemized
+      const osd = annualGross * 0.40; // Optional Standard Deduction
+      allowableDeduction = Math.max(totalContrib, osd) + 250000;
+    }
+  }
+
+  // ==========================================
+  // ✅ TAXABLE INCOME
+  // ==========================================
+  let taxable = Math.max(0, annualGross - allowableDeduction);
+
+  // ==========================================
+  // ✅ GRADUATED TAX TABLE (EXACT TRAIN LAW)
+  // ==========================================
+  let tax = 0;
+
+  if (taxType === "8percent") {
+    tax = taxable * 0.08;
+  } else {
+    if (taxable <= 250000) {
+      tax = 0;
+    } else if (taxable <= 400000) {
+      tax = (taxable - 250000) * 0.15;
+    } else if (taxable <= 800000) {
+      tax = 22500 + (taxable - 400000) * 0.20;
+    } else if (taxable <= 2000000) {
+      tax = 102500 + (taxable - 800000) * 0.25;
+    } else if (taxable <= 8000000) {
+      tax = 402500 + (taxable - 2000000) * 0.30;
+    } else {
+      tax = 2202500 + (taxable - 8000000) * 0.35;
+    }
+  }
+
+  tax = Math.max(tax, 0);
+
+  // ==========================================
+  // ✅ FINAL COMPUTATION
+  // ==========================================
+  const netAnnual = annualGross - totalContrib - tax;
+  const netMonthly = netAnnual / 12;
+
+  // ==========================================
+  // ✅ DISPLAY
+  // ==========================================
+  document.getElementById("result").style.display = "block";
+
+  document.getElementById("g").innerText = money(annualGross);
+  document.getElementById("s").innerText = money(sss);
+  document.getElementById("p").innerText = money(phil);
+  document.getElementById("pi").innerText = money(pagibig);
+
+  document.getElementById("c").innerText = money(totalContrib);
+  document.getElementById("ded").innerText = money(allowableDeduction);
+  document.getElementById("t").innerText = money(taxable);
+  document.getElementById("tx").innerText = money(tax);
+  document.getElementById("n").innerText = money(netAnnual);
+  document.getElementById("mn").innerText = money(netMonthly);
+}
+
+</script>
+
+</body>
+</html>
