@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ivan Troy Bandico | ivantroybandico.brave</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    /* Matches your global theme */
+    :root {
+      --primary: #0D9488;
+      --secondary: #34D399;
+      --accent: #059669;
+      --light: #F0FDF4;
+      --neutral: #F3F4F6;
+      --dark: #1F2937;
+      --gray: #6B7280;
+    }
+
+    /* Header styling — bold & welcoming */
+    .hero-header {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: white;
+      border-radius: 16px;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 6px 16px rgba(13, 148, 136, 0.15);
+    }
+    .hero-header h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 0.8rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .hero-header p {
+      font-size: 1.15rem;
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Grid layout for cards — responsive */
+    .sites-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.8rem;
+      margin-bottom: 3rem;
+    }
+
+    /* Card style — consistent with all your sections */
+    .site-card {
+      background: white;
+      border-radius: 14px;
+      padding: 2rem 1.8rem;
+      text-decoration: none;
+      color: inherit;
+      border-top: 4px solid var(--secondary);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .site-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 24px rgba(13, 148, 136, 0.12);
+      border-top-color: var(--primary);
+    }
+    .site-card h3 {
+      color: var(--primary);
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .site-card p {
+      color: var(--dark);
+      font-size: 1rem;
+      line-height: 1.5;
+      opacity: 0.85;
+    }
+
+    /* Footer styling — cohesive & elegant */
+    .page-footer {
+      text-align: center;
+      padding: 1.8rem;
+      background: var(--light);
+      border-radius: 12px;
+      color: var(--dark);
+      font-weight: 500;
+      border: 1px solid rgba(13, 148, 136, 0.1);
+    }
+    .page-footer strong {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Hero Header -->
+    <header class="hero-header">
+      <h1>Hello, I'm Ivan Troy!</h1>
+      <p>Welcome to my decentralized space — owned forever, hosted on IPFS, and built to last. Feel free to explore and connect.</p>
+    </header>
+
+    <!-- Navigation Cards -->
+    <div class="sites-grid">
+      <a href="./portfolio/" class="site-card">
+        <h3>💼 Portfolio</h3>
+        <p>Projects, work, and everything I’ve built and accomplished over time.</p>
+      </a>
+
+      <a href="./notes/" class="site-card">
+        <h3>📓 Notes & Ideas</h3>
+        <p>Personal thoughts, helpful guides, tools, and things I’m currently learning.</p>
+      </a>
+
+      <a href="./about/" class="site-card">
+        <h3>👤 About</h3>
+        <p>Who I am, what I believe in, and all the ways you can connect or support me.</p>
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <p>Owned at <strong>ivantroybandico.brave</strong> — Always available, always mine, forever yours.</p>
+    </footer>
+
+  </div>
+</body>
+</html>
