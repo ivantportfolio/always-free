@@ -6,31 +6,131 @@
   <title>About Me | Always Free</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Matches your main theme colors & style */
+    /* --------------------------
+    🔧 BASE & VARIABLES (MATCHES PORTFOLIO)
+    -------------------------- */
     :root {
-      --primary: #0D9488;
-      --secondary: #34D399;
-      --accent: #059669;
-      --light: #F0FDF4;
-      --neutral: #F3F4F6;
-      --dark: #1F2937;
-      --gray: #6B7280;
+      --primary: #0D9488;       /* Deep Teal Green */
+      --secondary: #34D399;     /* Soft Emerald Green */
+      --accent: #059669;        /* Rich Green */
+      --light: #F0FDF4;         /* Very Light Green */
+      --neutral: #F3F4F6;       /* Neutral Background */
+      --dark: #1F2937;          /* Dark Gray */
+      --gray: #6B7280;          /* Medium Gray */
+      --white: #ffffff;
+      --shadow-sm: 0 2px 6px rgba(13, 148, 136, 0.15);
+      --shadow-md: 0 4px 12px rgba(13, 148, 136, 0.06);
+      --shadow-lg: 0 8px 20px rgba(13, 148, 136, 0.08);
+      --transition: all 0.3s ease;
+      --transition-fast: all 0.2s ease;
     }
 
-    /* Enhanced donation section — consistent with your card design */
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--neutral);
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Back Link — consistent style */
+    a[href="index.html"] {
+      display: inline-block;
+      color: var(--primary);
+      font-weight: 500;
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: var(--transition-fast);
+    }
+    a[href="index.html"]:hover {
+      color: var(--accent);
+      transform: translateX(-3px);
+    }
+
+    /* --------------------------
+    📝 PAGE HEADER & DIVIDER
+    -------------------------- */
+    .page-content h1 {
+      color: var(--primary);
+      font-size: clamp(1.8rem, 3vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .divider {
+      border: none;
+      border-top: 2px solid var(--light);
+      margin: 1rem 0 2rem;
+    }
+
+    .intro-text {
+      font-size: 1rem;
+      color: var(--dark);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    /* --------------------------
+    📞 CONNECT SECTION
+    -------------------------- */
+    .connect-section h2 {
+      color: var(--primary);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .contact-list {
+      list-style: disc;
+      padding-left: 1.5rem;
+      color: var(--dark);
+      margin-bottom: 3rem;
+    }
+
+    .contact-list li {
+      margin: 0.6rem 0;
+      font-size: 1rem;
+    }
+
+    .contact-list a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--accent);
+      transition: var(--transition-fast);
+    }
+    .contact-list a:hover {
+      color: var(--primary);
+      border-bottom-style: solid;
+    }
+
+    /* --------------------------
+    🎁 DONATION SECTION
+    -------------------------- */
     .donation-section {
-      background: white;
-      border-radius: 12px;
+      background: var(--white);
+      border-radius: 14px;
       padding: 2rem;
-      margin-top: 2.5rem;
       border-top: 4px solid var(--primary);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
       text-align: center;
     }
     .donation-section:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      box-shadow: var(--shadow-lg);
     }
 
     .donation-section h2 {
@@ -43,7 +143,8 @@
       justify-content: center;
       gap: 0.5rem;
     }
-    .donation-section p.intro {
+
+    .donation-section .intro {
       color: var(--dark);
       font-size: 1rem;
       max-width: 500px;
@@ -51,7 +152,7 @@
       line-height: 1.6;
     }
 
-    /* QR Code styling — clean & framed */
+    /* QR Code — fixed & optimized */
     .qr-wrapper {
       background: var(--light);
       padding: 1rem;
@@ -67,7 +168,7 @@
       border-radius: 6px;
     }
 
-    /* Payment options layout — clean list style */
+    /* Payment details */
     .payment-options {
       text-align: left;
       max-width: 400px;
@@ -84,20 +185,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
     .payment-options p strong {
       color: var(--primary);
     }
 
-    /* Notes styling — subtle & small */
-    .note {
-      font-size: 0.825rem;
-      color: var(--gray);
-      margin: 0.3rem 0;
-      font-style: italic;
-    }
-
-    /* Highlight crypto address like your links */
+    /* Crypto address style */
     .crypto-address {
       background: rgba(13, 148, 136, 0.08);
       padding: 0.3rem 0.6rem;
@@ -106,6 +201,48 @@
       color: var(--accent);
       font-family: monospace;
       font-size: 0.9rem;
+      word-break: break-all;
+    }
+
+    /* Notes */
+    .note {
+      font-size: 0.825rem;
+      color: var(--gray);
+      margin: 0.3rem 0;
+      font-style: italic;
+    }
+
+    /* --------------------------
+    🦶 FOOTER
+    -------------------------- */
+    .page-footer {
+      margin-top: 3rem;
+      padding: 1.5rem;
+      background-color: var(--light);
+      border-radius: 12px;
+      color: var(--gray);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    /* --------------------------
+    📱 RESPONSIVE
+    -------------------------- */
+    @media (max-width: 600px) {
+      .container {
+        padding: 1.5rem 1rem;
+      }
+      .donation-section {
+        padding: 1.5rem;
+      }
+      .qr-code {
+        width: 160px;
+        height: 160px;
+      }
+      .payment-options {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
@@ -115,46 +252,47 @@
 
     <div class="page-content">
       <h1>About Me</h1>
-      <hr style="margin: 1rem 0; border-color: var(--light);">
+      <hr class="divider">
 
-      <p>Hi! I’m Ivan, a person who believes the internet should be a place of freedom. That’s why I built this space — fully free with no catch! Just unadulterated freedom of access and use! I am not a programmer, in fact, computer technology is far from my professional specialization. But with my little knowledge and a big help from AI, I was able to develop this website. I hope my projects can be of help to you. For any issues and requests, you may contact me using the contact details below.</p>
+      <p class="intro-text">
+        Hi! I’m Ivan, a person who believes the internet should be a place of freedom. That’s why I built this space — fully free with no catch! Just unadulterated freedom of access and use! I am not a programmer, in fact, computer technology is far from my professional specialization. But with my little knowledge and a big help from AI, I was able to develop this website. I hope my projects can be of help to you. For any issues and requests, you may contact me using the contact details below.
+      </p>
 
-      <h2 style="margin-top: 1.5rem; color: var(--primary);">Connect With Me</h2>
-      <ul style="list-style: disc; padding-left: 1.2rem; color: var(--dark);">
-        <li style="margin: 0.5rem 0;">Email: <a href="mailto:ivantroybandico@gmail.com" style="color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent);">ivantroybandico@gmail.com</a></li>
-      </ul>
+      <div class="connect-section">
+        <h2>Connect With Me</h2>
+        <ul class="contact-list">
+          <li>Email: <a href="mailto:ivantroybandico@gmail.com">ivantroybandico@gmail.com</a></li>
+        </ul>
+      </div>
 
-
-      <!-- ✅ IMPROVED DONATION SECTION -->
+      <!-- ✅ SUPPORT SECTION -->
       <div class="donation-section">
         <h2>☕ Support My Work</h2>
-        <p class="intro">If you find my projects or content helpful, any contribution is greatly appreciated — it helps me keep building and improving this free space!</p>
+        <p class="intro">
+          If you find my projects or content helpful, any contribution is greatly appreciated — it helps me keep building and improving this free space!
+        </p>
 
-        <!-- QR Code — now embedded properly, works offline -->
+        <!-- Fixed QR Code implementation -->
         <div class="qr-wrapper">
-          <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" class="qr-code">
-            <image 
-              href="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=00020101021128500011ph.ppmi.p2m0111PAPHPHM1XXX030920180619605033105204539953036085802PH5917IVAN%20TROY%20BANDICO6008Midsayap62440014com.paymaya.qr05227D6PJoHDKxdsBHwvkftZpD6304391D" 
-              width="200" 
-              height="200"
-              alt="QRPh"
-            />
-          </svg>
+          <img 
+            src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=00020101021128500011ph.ppmi.p2m0111PAPHPHM1XXX030920180619605033105204539953036085802PH5917IVAN%20TROY%20BANDICO6008Midsayap62440014com.paymaya.qr05227D6PJoHDKxdsBHwvkftZpD6304391D" 
+            alt="Payment QR Code - PayMaya / All Philippine Banks & E-Wallets" 
+            class="qr-code"
+            loading="lazy"
+          >
         </div>
 
         <div class="payment-options">
-          <p><span>👤 Name</span> <strong>Ivan Troy Bandico</strong></p>
-          <p><span>🪙 Crypto</span> <span class="crypto-address">ivantroybandico.brave</span></p>
+          <p><span>👤 Full Name</span> <strong>Ivan Troy Bandico</strong></p>
+          <p><span>🪙 Crypto / Brave</span> <span class="crypto-address">ivantroybandico.brave</span></p>
         </div>
 
-        <p class="note">*QR code works with all Philippine banks & e-wallets supporting InstaPay</p>
-        <p class="note">*No transaction fees for QR donations</p>
+        <p class="note">*QR works with all major Philippine banks & e-wallets that supports InstaPay</p>
+        <p class="note">*No transaction fees for QR donations.</p>
       </div>
-      <!-- ✅ END OF DONATION SECTION -->
-
 
     </div>
- </div>
+
     <!-- Footer -->
     <footer class="page-footer">
       <p>Please use my products responsibly. Freedom ends when abuse starts.</p>
