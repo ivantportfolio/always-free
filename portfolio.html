@@ -6,60 +6,111 @@
   <title>Portfolio | Always Free</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Global theme variables — matches your entire site */
+    /* --------------------------
+    🔧 OPTIMIZED BASE & VARIABLES
+    -------------------------- */
     :root {
       --primary: #0D9488;       /* Deep Teal Green */
       --secondary: #34D399;     /* Soft Emerald Green */
       --accent: #059669;        /* Rich Green */
       --light: #F0FDF4;         /* Very Light Green */
-      --neutral: #F3F4F6;        /* Neutral Background */
+      --neutral: #F3F4F6;       /* Neutral Background */
       --dark: #1F2937;          /* Dark Gray */
       --gray: #6B7280;          /* Medium Gray */
+      --white: #ffffff;
+      --shadow-sm: 0 2px 6px rgba(13, 148, 136, 0.15);
+      --shadow-md: 0 4px 12px rgba(13, 148, 136, 0.06);
+      --shadow-lg: 0 10px 24px rgba(13, 148, 136, 0.12);
+      --transition: all 0.3s ease;
+      --transition-fast: all 0.2s ease;
     }
 
+    /* Simple CSS Reset — removes default browser spacing */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--neutral);
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Back Link — improved style */
+    a[href="index.html"] {
+      display: inline-block;
+      color: var(--primary);
+      font-weight: 500;
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: var(--transition-fast);
+    }
+    a[href="index.html"]:hover {
+      color: var(--accent);
+      transform: translateX(-3px);
+    }
+
+    /* --------------------------
+    📝 PAGE HEADER
+    -------------------------- */
     .page-header {
-      margin-bottom: 2.5rem;
-      padding-bottom: 1rem;
+      margin-bottom: 3rem;
+      padding-bottom: 1.2rem;
       border-bottom: 2px solid var(--light);
     }
     .page-header h1 {
       color: var(--primary);
-      font-size: 2rem;
+      font-size: clamp(1.8rem, 3vw, 2.2rem);
       font-weight: 700;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
+      line-height: 1.3;
     }
     .page-header p {
       color: var(--gray);
       font-size: 1.05rem;
-      max-width: 600px;
+      max-width: 650px;
     }
 
-    /* Projects Grid — responsive & modern spacing */
+    /* --------------------------
+    📊 PROJECTS GRID
+    -------------------------- */
     .projects-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
       gap: 2rem;
     }
 
-    /* Project Card — consistent design language */
+    /* --------------------------
+    🟩 PROJECT CARD
+    -------------------------- */
     .project-card {
-      background: #ffffff;
+      background: var(--white);
       border-radius: 14px;
       overflow: hidden;
       border-top: 4px solid var(--secondary);
-      box-shadow: 0 4px 12px rgba(13, 148, 136, 0.06);
-      transition: all 0.3s ease;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
       height: 100%;
       display: flex;
       flex-direction: column;
     }
     .project-card:hover {
       transform: translateY(-6px);
-      box-shadow: 0 10px 24px rgba(13, 148, 136, 0.12);
+      box-shadow: var(--shadow-lg);
       border-top-color: var(--primary);
     }
 
-    /* Image section — clean framing */
+    /* Image Section */
     .project-img-wrapper {
       position: relative;
       overflow: hidden;
@@ -70,12 +121,14 @@
       height: 180px;
       object-fit: cover;
       transition: transform 0.4s ease;
+      /* Prevents image distortion */
+      display: block;
     }
     .project-card:hover .project-img {
       transform: scale(1.05);
     }
 
-    /* Content area — proper spacing & typography */
+    /* Content Area */
     .project-info {
       padding: 1.5rem;
       flex-grow: 1;
@@ -93,10 +146,11 @@
       color: var(--dark);
       font-size: 0.95rem;
       line-height: 1.5;
-      margin-bottom: 0.8rem;
+      margin-bottom: 1rem;
+      flex-grow: 1; /* Pushes button to bottom */
     }
 
-    /* Tech stack tag — styled like your skill labels */
+    /* Tech Stack Tag */
     .tech-stack {
       font-size: 0.825rem;
       color: var(--accent);
@@ -106,27 +160,67 @@
       display: inline-block;
       margin-bottom: 1.2rem;
       font-weight: 500;
+      line-height: 1.4;
     }
 
-    /* Action button — matches theme colors */
+    /* Action Button */
     .open-btn {
-      display: inline-block;
-      margin-top: auto;
-      padding: 0.65rem 1.2rem;
+      display: block;
+      width: 100%;
+      padding: 0.7rem 1.2rem;
       background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-      color: #ffffff !important;
+      color: var(--white) !important;
       text-decoration: none;
       border-radius: 8px;
       font-weight: 600;
       font-size: 0.9rem;
       text-align: center;
-      transition: opacity 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 2px 6px rgba(13, 148, 136, 0.15);
+      transition: var(--transition-fast);
+      box-shadow: var(--shadow-sm);
     }
     .open-btn:hover {
       opacity: 0.92;
       transform: translateY(-2px);
-      color: #ffffff !important;
+      color: var(--white) !important;
+      box-shadow: 0 4px 10px rgba(13, 148, 136, 0.2);
+    }
+
+    /* --------------------------
+    🦶 FOOTER
+    -------------------------- */
+    .page-footer {
+      margin-top: 4rem;
+      padding: 1.5rem;
+      background-color: var(--light);
+      border-radius: 12px;
+      color: var(--gray);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    /* --------------------------
+    📱 RESPONSIVE IMPROVEMENTS
+    -------------------------- */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem 1rem;
+      }
+      .page-header {
+        margin-bottom: 2rem;
+      }
+      .project-img {
+        height: 160px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-header h1 {
+        font-size: 1.6rem;
+      }
+      .open-btn {
+        padding: 0.8rem;
+      }
     }
   </style>
 </head>
@@ -146,7 +240,7 @@
         <!-- ✅ PROJECT 1 -->
         <div class="project-card">
           <div class="project-img-wrapper">
-            <img src="images/project1.png" alt="Complete TRAIN Law Calculator" class="project-img">
+            <img src="images/project1.png" alt="Complete TRAIN Law Calculator" class="project-img" loading="lazy">
           </div>
           <div class="project-info">
             <h3>Complete TRAIN Law Calculator</h3>
@@ -159,7 +253,7 @@
         <!-- ✅ PROJECT 2 -->
         <div class="project-card">
           <div class="project-img-wrapper">
-            <img src="images/project2.png" alt="Salary Calculator" class="project-img">
+            <img src="images/project2.png" alt="Salary Calculator" class="project-img" loading="lazy">
           </div>
           <div class="project-info">
             <h3>Salary Calculator</h3>
@@ -172,7 +266,7 @@
         <!-- ✅ PROJECT 3 -->
         <div class="project-card">
           <div class="project-img-wrapper">
-            <img src="images/project3.png" alt="Payroll Engine" class="project-img">
+            <img src="images/project3.png" alt="Payroll Engine" class="project-img" loading="lazy">
           </div>
           <div class="project-info">
             <h3>Payroll Engine</h3>
@@ -182,11 +276,10 @@
           </div>
         </div>
 
-        <!-- ✅ ADD MORE PROJECTS — COPY THIS BLOCK ↓ -->
-        <!--
+        <!-- ✅ ADD MORE PROJECTS — COPY THIS BLOCK ↓
         <div class="project-card">
           <div class="project-img-wrapper">
-            <img src="../assets/images/NEW_IMAGE.png" alt="New Project" class="project-img">
+            <img src="../assets/images/NEW_IMAGE.png" alt="New Project" class="project-img" loading="lazy">
           </div>
           <div class="project-info">
             <h3>New Project Name</h3>
@@ -203,11 +296,6 @@
     <footer class="page-footer">
       <p>All products provided on this website are free to use and distributed "as is" without any warranties. The developer assumes no liability and shall not be held responsible for any illegal, unauthorized, or harmful use of these templates or code snippets. Users are entirely responsible for the content they host, ensuring it complies with all applicable local and international laws.</p>
     </footer>
-
-  </div>
-</body>
-</html>
-
 
     </div>
   </div>
